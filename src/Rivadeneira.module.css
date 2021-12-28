@@ -1,0 +1,18 @@
+.button
+{
+    display: block;
+    color: #fff;
+    background-color: darkblue;
+    width: 150px;
+    height: 70px;
+    border-right: 10px;
+    border-left: 10px;
+    
+}
+
+.rowClass
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
