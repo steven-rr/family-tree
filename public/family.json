@@ -3,9 +3,8 @@
         "id": "0",
         "name": "Victor Rivadeneira Dominguez",
         "gender": "male",
-        "partnerID": [1],
-        "kidsID": [3,6]
-        
+        "partnerID": [2,1],
+        "kidsID": [[3,4,5,6,7],[8,9,10,11,12,13]]
     },
     {
         "id": "1",
@@ -19,23 +18,90 @@
     },
     {
         "id": "3",
-        "name": "Pedro Osorio",
-        "gender": "male"
+        "name": "Pedro Rivadeneira Osorio",
+        "gender": "male",
+        "partnerID": [14],
+        "kidsID": [[15,16,17,18,19]]
     },
     {
         "id": "4",
-        "name": "Ovidio Caceres",
-        "gender" : "male"
+        "name": "Dolores (Lola) Rivadeneira Osorio",
+        "gender": "female"
     },
     {
         "id": "5",
-        "name": "Mayo Caceres",
-        "gender" : "male"
+        "name": "Ernestina Rivadeneira Osorio",
+        "gender": "female"
     },
     {
         "id": "6",
-        "name": "Lola Osorio",
+        "name": "Celicia Rivadeneira Osorio",
         "gender": "female"
+    },
+    {
+        "id": "7",
+        "name": "Casimira Rivadeneira Osorio",
+        "gender": "female"
+    },
+    {
+        "id": "8",
+        "name": "Ovidio Rivadeneira Caceres",
+        "gender" : "male"
+    },
+    {
+        "id": "9",
+        "name": "Sulpicia (Sulpi) Rivadeneira Caceres",
+        "gender" : "female"
+    },
+    {
+        "id": "10",
+        "name": "Gonzalo Rivadeneira Caceres",
+        "gender" : "male"
+    },
+    {
+        "id": "11",
+        "name": "Andrea Rivadeneira Caceres",
+        "gender" : "female"
+    },
+    {
+        "id": "12",
+        "name": "Nino Rivadeneira Caceres",
+        "gender" : "male"
+    },
+    {
+        "id": "13",
+        "name": "Amaro (Mayo) Rivadeneira Caceres",
+        "gender" : "female"
+    },
+    {
+        "id": "14",
+        "name": "Rosa Lizarraga Nuñez",
+        "gender": "female"
+    },
+    {
+        "id": "15",
+        "name": "Pedro Rivadeneira Lizarraga",
+        "gender": "male"
+    },
+    {
+        "id": "16",
+        "name": "Victor Rivadeneira Lizarraga",
+        "gender": "male"
+    },
+    {
+        "id": "17",
+        "name": "Enma Victoria Rivadeneira Lizarraga",
+        "gender": "female"
+    },
+    {
+        "id": "18",
+        "name": "Elizabeth (Chela) Rivadeneira Lizarraga",
+        "gender": "female"
+    },
+    {
+        "id": "19",
+        "name": "Nestor Rivadeneira Lizarraga",
+        "gender": "male"
     }
 
 

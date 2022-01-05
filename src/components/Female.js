@@ -10,7 +10,6 @@ const Female = ({id}) => {
         await axios 
             .get('family.json')
             .then ( (response) => {
-                console.log(response.data)
                 setFamilyData(response.data);
             })
     },[])
@@ -18,15 +17,14 @@ const Female = ({id}) => {
     return (
         <div>
             {/* display name. */}
-            {familyData.map( item => {
-                console.log(id)
-                console.log(item.id)
+            {familyData.map( (item,key) => {
+
                 if(item.id == id)
                 {
                     return(
-                    <div className=  {FemaleCSS.iconContainer}>
+                    <div className=  {FemaleCSS.iconContainer} key = {key}>
                         <div className={FemaleCSS.icon}></div>
-                        <div> {item.name} </div>
+                        <div className={FemaleCSS.text}> {item.name} </div>
                     </div>
                     )
                 } 

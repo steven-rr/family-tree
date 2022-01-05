@@ -3,9 +3,7 @@
         "id": "0",
         "name": "Victor Rivadeneira Dominguez",
         "gender": "male",
-        "partnerID": [1],
-        "kidsID": [3,6]
-        
+        "partnerID": [1]        
     },
     {
         "id": "1",

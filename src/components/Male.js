@@ -17,7 +17,6 @@ const Male = ({id}) => {
         await axios 
             .get('family.json')
             .then ( (response) => {
-                console.log(response.data)
                 setFamilyData(response.data);
                 if(response.data[id].kidsID)
                 {
@@ -31,41 +30,137 @@ const Male = ({id}) => {
             })
     },[])
 
-    if(kidData)
-    {
-    
-        return (
-        <div className={MaleCSS.pageContainer}>
-            {/* display name. */}
-            {familyData.map( (item, key) => {
-                if(item.id == id)
-                {
-                    console.log("kidsID: ", item.kidsID);
-                    {/* for each partner, draw the kids and the partner.  */}
-                    
-                    return(
-                        <div className= {MaleCSS.container} key={key}>
-                            <div className=  {MaleCSS.iconContainer}>
-                                <div className={MaleCSS.icon}></div>
-                                <div> {item.name} </div>
-                            </div>
-                        </div>
-                    ) 
-                } 
-            })}
-            {/* put in kids, a bit shifted. */}
-            
-          <div className={MaleCSS.row}>
-            {kidData.map((item,key)=>{
-                console.log("item", item)
-                return(
+
+    const loopThroughKids = async(item, key) => {
+        if(item.length > 1)
+        {
+            for(var i =0; i< item.length; i ++)
+            {
+                console.log("1: ",i, item[i], item)
+                return await (
                     <Male
                         key={key}
-                        id={item}
+                        id={item[i]}
                     />
                 )
-            })}
-          </div>
+            }
+        }
+        else
+        {                    
+            console.log("2: ", item)
+            return await(
+                <Male
+                    key={key}
+                    id={item[0]}
+                />
+            )
+        }
+    }
+    const labelKids = async () =>  {
+        return Promise.all(kidData.map((item,key)=>{
+            loopThroughKids(item, key)
+        }))}
+    const loopThruPartners = async(item, key) => {
+        for(const element of partnerData) 
+        {
+            if(item.id == element)
+            {   
+                if(item.gender == "male")
+                {
+                    return await (
+                    <Male 
+                        id={item.id}
+                        key = {key}
+                    />)
+                }
+                else
+                {
+                    return await(
+                    <Female 
+                        id={item.id}
+                        key = {key}
+                    />)
+                }
+            }
+        }
+    } 
+
+    const labelPartners = async () => {
+        return Promise.all(familyData.map( (item, key) => {
+            loopThruPartners(item, key)
+        }))} 
+
+    if(kidData.length != 0 )
+    {
+        return (
+        <div>
+            <div className= {MaleCSS.row}>
+                {/* display name. */}
+                {familyData.map( (item, key) => {
+                    if(item.id == id)
+                    {                        
+                        return(
+                            <div key={key}>
+                                <div className=  {MaleCSS.iconContainer}>
+                                    <div className={MaleCSS.icon}></div>
+                                    <div className={MaleCSS.text}> {item.name} </div>
+                                </div>
+                            </div>
+                        ) 
+                    } 
+                })}
+                {/* display partners */}
+                {familyData.map( (item, key) => {
+                    
+                    for (var i =0; i < partnerData.length; i++) 
+                    {
+                        if(item.id == partnerData[i])
+                        {   
+                            if(item.gender == "male")
+                            {
+                                return  (
+                                <Male 
+                                        id={partnerData[i]}
+                                        key = {key}
+                                />)
+                            }
+                            else
+                            {
+                                return  (
+                                <Female 
+                                    id={partnerData[i]}
+                                    key = {key}
+                                />)
+                            }
+                        }
+                    }
+                    
+                })}
+            </div>
+            {/* put in kids*/}
+            <div className={MaleCSS.row}>
+                {(kidData.map((item,key)=>{ 
+                    // handle array of kids.
+                    if(item.length > 1)
+                    {   
+                        return( item.map((item2, key2) => (
+                        <Male
+                            key={key2}
+                            id={item2}
+                        />
+                    ))) }
+                    // else, handle one kid at a time. 
+                    else
+                    {                    
+                        return (
+                            <Male
+                                key={key}
+                                id={item[0]}
+                            />
+                        )
+                    }
+                }))}
+            </div>
         </div>
     )}
     else
@@ -75,18 +170,43 @@ const Male = ({id}) => {
                 {/* display name. */}
                 {familyData.map( (item, key) => {
                     if(item.id == id)
-                    {
-                        console.log("kidsID: ", item.kidsID);
-                        
+                    {                        
                         return(
-                            <div className= {MaleCSS.container} key={key}>
+                            <div key={key}>
                                 <div className=  {MaleCSS.iconContainer}>
                                     <div className={MaleCSS.icon}></div>
-                                    <div> {item.name} </div>
+                                    <div className={MaleCSS.text}> {item.name} </div>
                                 </div>
                             </div>
                         ) 
                     } 
+                })}
+                {/* display partners */}
+                {familyData.map( (item, key) => {
+                    
+                    for (var i =0; i < partnerData.length; i++) 
+                    {
+                        if(item.id == partnerData[i])
+                        {   
+                            if(item.gender == "male")
+                            {
+                                return  (
+                                <Male 
+                                        id={partnerData[i]}
+                                        key = {key}
+                                />)
+                            }
+                            else
+                            {
+                                return  (
+                                <Female 
+                                    id={partnerData[i]}
+                                    key = {key}
+                                />)
+                            }
+                        }
+                    }
+                    
                 })}
             </div>)
     }
