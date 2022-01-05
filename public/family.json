@@ -46,7 +46,9 @@
     {
         "id": "8",
         "name": "Ovidio Rivadeneira Caceres",
-        "gender" : "male"
+        "gender" : "male",
+        "partnerID": [32],
+        "kidsID": [[33,34,35]]
     },
     {
         "id": "9",
@@ -61,22 +63,30 @@
     {
         "id": "11",
         "name": "Andrea Rivadeneira Caceres",
-        "gender" : "female"
+        "gender" : "female",
+        "partnerID": [28],
+        "kidsID": [[29,30,31]]
     },
     {
         "id": "12",
         "name": "Nino Rivadeneira Caceres",
-        "gender" : "male"
+        "gender" : "male",
+        "partnerID": [36],
+        "kidsID": [[37,38,39, 40, 41]]
     },
     {
         "id": "13",
         "name": "Amaro (Mayo) Rivadeneira Caceres",
-        "gender" : "female"
+        "gender" : "male",
+        "partnerID": [24],
+        "kidsID": [[25,26,27]]
     },
     {
         "id": "14",
         "name": "Rosa Lizarraga Nuñez",
-        "gender": "female"
+        "gender": "female",
+        "partnerID": [21]
+        
     },
     {
         "id": "15",
@@ -91,7 +101,10 @@
     {
         "id": "17",
         "name": "Enma Victoria Rivadeneira Lizarraga",
-        "gender": "female"
+        "gender": "female",
+        "partnerID": [33],
+        "kidsID": [[42,43]]
+
     },
     {
         "id": "18",
@@ -107,7 +120,124 @@
         "id": "20",
         "name": "Jorge Luis Rivadeneira Rojas",
         "gender": "male"
+    },
+    {
+        "id": "21",
+        "name": "Alguien Pardo Rivera",
+        "gender": "male"
+    },
+    {
+        "id": "22",
+        "name": "Emnida Pardo Rivera",
+        "gender": "female"
+    },
+    {
+        "id": "23",
+        "name": "Ernesto Pardo Rivera",
+        "gender": "male"
+    },
+    {
+        "id": "24",
+        "name": "Alguien Samaniego",
+        "gender": "female"
+    },
+    {
+        "id": "25",
+        "name": "Ricardo Rivadeneira Samaniego",
+        "gender": "male"
+    },
+    {
+        "id": "26",
+        "name": "Elianna Rivadeneira Samaniego",
+        "gender": "female"
+    },
+    {
+        "id": "27",
+        "name": "Marianella Rivadeneira Samaniego",
+        "gender": "female"
+    },
+    {
+        "id": "28",
+        "name": "Alguien Perez",
+        "gender": "male"
+    },
+    {
+        "id": "29",
+        "name": "Pepe Perez Rivadeneira",
+        "gender": "male"
+    },
+    {
+        "id": "30",
+        "name": "Rosa Perez Rivadeneira",
+        "gender": "female"
+    },
+    {
+        "id": "31",
+        "name": "Emelina Perez Rivadeneira",
+        "gender": "female"
+    },
+    {
+        "id": "32",
+        "name": "Felicia Rojas",
+        "gender": "female"
+    },
+    {
+        "id": "33",
+        "name": "Jorge Luis (Lucho) Rivadeneira Rojas",
+        "gender": "male"
+    },
+    {
+        "id": "34",
+        "name": "Guillermo Rivadeneira Rojas",
+        "gender": "male"
+    },
+    {
+        "id": "35",
+        "name": "Carlos Alberto (Beto) Rivadeneira Rojas",
+        "gender": "male"
+    },
+    {
+        "id": "36",
+        "name": "Dora Monge",
+        "gender": "female"
+    },
+    {
+        "id": "37",
+        "name": "Miguel Rivadeneira Monge",
+        "gender": "male"
+    },
+    {
+        "id": "38",
+        "name": "Mary (Capi) Rivadeneira Monge",
+        "gender": "female"
+    },
+    {
+        "id": "39",
+        "name": "Jorge Luis Rivadeneira Monge",
+        "gender": "male"
+    },
+    {
+        "id": "40",
+        "name": "Victor Rivadeneira Monge",
+        "gender": "male"
+    },
+    {
+        "id": "41",
+        "name": "Ita Rivadeneira Monge",
+        "gender": "female"
+    },
+    {
+        "id": "42",
+        "name": "Steven Rivadeneira Rivadeneira",
+        "gender": "male"
+    },
+    {
+        "id": "43",
+        "name": "Karina Rivadeneira Rivadeneira",
+        "gender": "female"
     }
+    
+
     
 
 
