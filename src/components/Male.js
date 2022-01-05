@@ -143,12 +143,22 @@ const Male = ({id}) => {
                     // handle array of kids.
                     if(item.length > 1)
                     {   
-                        return( item.map((item2, key2) => (
-                        <Male
-                            key={key2}
-                            id={item2}
-                        />
-                    ))) }
+                        return( item.map((item2, key2) => {
+                        if(familyData[item2].gender == "male") 
+                        {
+                            return (<Male
+                                key={key2}
+                                id={item2}
+                            />)
+                        }
+                        else
+                        {
+                            return (<Female
+                                key={key2}
+                                id={item2}
+                            />)
+                        }}
+                    )) }
                     // else, handle one kid at a time. 
                     else
                     {                    
