@@ -28,7 +28,10 @@ const Male = ({id}) => {
                 }
 
             })
+            
+        
     },[])
+
 
 
     const loopThroughKids = async(item, key) => {
@@ -36,7 +39,6 @@ const Male = ({id}) => {
         {
             for(var i =0; i< item.length; i ++)
             {
-                console.log("1: ",i, item[i], item)
                 return await (
                     <Male
                         key={key}
@@ -47,7 +49,6 @@ const Male = ({id}) => {
         }
         else
         {                    
-            console.log("2: ", item)
             return await(
                 <Male
                     key={key}

@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+  overflow-x: visible;
+  overflow-y: visible;
+
+  width: 100%;
 }
 
 .App-logo {

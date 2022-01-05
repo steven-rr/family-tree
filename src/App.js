@@ -4,7 +4,9 @@ import Rivadeneira from './Rivadeneira'
 function App() {
   return (
     <div className="App">
-      <Rivadeneira/>
+      <div> 
+        <Rivadeneira/>
+      </div>
     </div>
   );
 }

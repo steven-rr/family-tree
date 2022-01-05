@@ -25,6 +25,8 @@ const Female = ({id}) => {
             })
     },[])
 
+    
+
     if(kidData.length != 0 )
     {
         return (
@@ -46,7 +48,6 @@ const Female = ({id}) => {
                 })}
                 {/* display partners */}
                 {familyData.map( (item, key) => {
-                    console.log("female, partner data ", partnerData)
                     for (var i =0; i < partnerData.length; i++) 
                     {
                         if(item.id == partnerData[i])
@@ -129,7 +130,6 @@ const Female = ({id}) => {
                 })}
                 {/* display partners */}
                 {familyData.map( (item, key) => {
-                    console.log("female, partner data ", partnerData)
                     for (var i =0; i < partnerData.length; i++) 
                     {
                         if(item.id == partnerData[i])
