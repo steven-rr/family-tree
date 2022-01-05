@@ -20,8 +20,8 @@
         "id": "3",
         "name": "Pedro Rivadeneira Osorio",
         "gender": "male",
-        "partnerID": [14],
-        "kidsID": [[15,16,17,18,19]]
+        "partnerID": [14, 44],
+        "kidsID": [[15,16,17,18,19], [45,46,47,48,49,50]]
     },
     {
         "id": "4",
@@ -31,7 +31,9 @@
     {
         "id": "5",
         "name": "Ernestina Rivadeneira Osorio",
-        "gender": "female"
+        "gender": "female",
+        "partnerID": [68],
+        "kidsID": [[65,66,67]]
     },
     {
         "id": "6",
@@ -41,14 +43,16 @@
     {
         "id": "7",
         "name": "Casimira Rivadeneira Osorio",
-        "gender": "female"
+        "gender": "female",
+        "partnerID": [69],
+        "kidsID": [[70,71]]
     },
     {
         "id": "8",
         "name": "Ovidio Rivadeneira Caceres",
         "gender" : "male",
-        "partnerID": [32],
-        "kidsID": [[33,34,35]]
+        "partnerID": [32, 72],
+        "kidsID": [[33,34,35], [73, 74]]
     },
     {
         "id": "9",
@@ -84,14 +88,14 @@
     {
         "id": "14",
         "name": "Rosa Lizarraga Nuñez",
-        "gender": "female",
-        "partnerID": [21]
-        
+        "gender": "female"        
     },
     {
         "id": "15",
-        "name": "Pedro Rivadeneira Lizarraga",
-        "gender": "male"
+        "name": "Pedro Antonio (Pedroncho) Rivadeneira Lizarraga",
+        "gender": "male",
+        "partnerID": [51, 55],
+        "kidsID": [[52,53,54], [56]]
     },
     {
         "id": "16",
@@ -102,14 +106,16 @@
         "id": "17",
         "name": "Enma Victoria Rivadeneira Lizarraga",
         "gender": "female",
-        "partnerID": [33],
+        "partnerID": [20],
         "kidsID": [[42,43]]
 
     },
     {
         "id": "18",
         "name": "Elizabeth (Chela) Rivadeneira Lizarraga",
-        "gender": "female"
+        "gender": "female",
+        "partnerID": [57],
+        "kidsID": [[58,59, 60]]
     },
     {
         "id": "19",
@@ -118,8 +124,9 @@
     },
     {
         "id": "20",
-        "name": "Jorge Luis Rivadeneira Rojas",
+        "name": "Jorge Luis (Lucho) Rivadeneira Rojas",
         "gender": "male"
+        
     },
     {
         "id": "21",
@@ -169,7 +176,9 @@
     {
         "id": "30",
         "name": "Rosa Perez Rivadeneira",
-        "gender": "female"
+        "gender": "female",
+        "partnerID": [89],
+        "kidsID": [[90,91]]
     },
     {
         "id": "31",
@@ -184,7 +193,10 @@
     {
         "id": "33",
         "name": "Jorge Luis (Lucho) Rivadeneira Rojas",
-        "gender": "male"
+        "gender": "male",
+        "partnerID": [61, 62],
+        "kidsID": [[42,43], [63,64]]
+
     },
     {
         "id": "34",
@@ -209,7 +221,9 @@
     {
         "id": "38",
         "name": "Mary (Capi) Rivadeneira Monge",
-        "gender": "female"
+        "gender": "female",
+        "partnerID": [92],
+        "kidsID": [[93,94]]
     },
     {
         "id": "39",
@@ -235,10 +249,272 @@
         "id": "43",
         "name": "Karina Rivadeneira Rivadeneira",
         "gender": "female"
+    },
+    {
+        "id": "44",
+        "name": "Maria Algo",
+        "gender": "female"
+    },
+    {
+        "id": "45",
+        "name": "Luisa Rivadeneira Algo",
+        "gender": "female"
+    },
+    {
+        "id": "46",
+        "name": "Balvina Rivadeneira Algo",
+        "gender": "female"
+    },
+    {
+        "id": "47",
+        "name": "Rosario (Shayo) Rivadeneira Algo",
+        "gender": "male"
+    },
+    {
+        "id": "48",
+        "name": "Ines Rivadeneira Algo",
+        "gender": "female"
+    },
+    {
+        "id": "49",
+        "name": "Walter Rivadeneira Algo",
+        "gender": "male"
+    },
+    {
+        "id": "50",
+        "name": "Raul Rivadeneira Algo",
+        "gender": "male"
+    },
+    {
+        "id": "51",
+        "name": "Lydia Cardenas",
+        "gender": "female"
+    },
+    {
+        "id": "52",
+        "name": "Pedro Carlomagno Rivadeneira Cardenas",
+        "gender": "male"
+    },
+    {
+        "id": "53",
+        "name": "Roberto Carlos Rivadeneira Cardenas",
+        "gender": "male"
+    },
+    {
+        "id": "54",
+        "name": "Patricia Rivadeneira Cardenas",
+        "gender": "female"
+    },
+    {
+        "id": "55",
+        "name": "Vilma Benitez",
+        "gender": "female"
+    },
+    {
+        "id": "56",
+        "name": "Rosa Rivadeneira Benitez",
+        "gender": "female"
+    },
+    {
+        "id": "57",
+        "name": "Alguien Cespedes",
+        "gender": "male"
+    },
+    {
+        "id": "58",
+        "name": "John Fitzgerald Cespedes Rivadeneira",
+        "gender": "male"
+    },
+    {
+        "id": "59",
+        "name": "Jose (Joselo) Cespedes Rivadeneira",
+        "gender": "male"
+    },
+    {
+        "id": "60",
+        "name": "Milagros Cespedes Rivadeneira",
+        "gender": "female"
+    },
+    {
+        "id": "61",
+        "name": "Enma Rivadeneira Lizarraga",
+        "gender": "female"
+    },
+    {
+        "id": "62",
+        "name": "Amanda Diaz",
+        "gender": "female"
+    },
+    {
+        "id": "63",
+        "name": "Ivette Rivadeneira Diaz",
+        "gender": "female"
+    },
+    {
+        "id": "64",
+        "name": "Jorge Kennet Rivadeneira Diaz",
+        "gender": "male"
+    },
+    {
+        "id": "65",
+        "name": "Aurelio Algo Rivadeneira",
+        "gender": "male"
+    },
+    {
+        "id": "66",
+        "name": "Manuel Algo Rivadeneira",
+        "gender": "male"
+    },
+    {
+        "id": "67",
+        "name": "Esperanza Algo Rivadeneira",
+        "gender": "female"
+    },
+    {
+        "id": "68",
+        "name": "Alguien",
+        "gender": "male"
+    },
+    {
+        "id": "69",
+        "name": "Alguien",
+        "gender": "male"
+    },
+    {
+        "id": "70",
+        "name": "Santos algo Rivadeneira",
+        "gender": "female"
+    },
+    {
+        "id": "71",
+        "name": "Fidel algo Rivadeneira",
+        "gender": "male"
+    },
+    {
+        "id": "72",
+        "name": "Alguien Castro",
+        "gender": "female"
+    },
+    {
+        "id": "73",
+        "name": "Arturo Rivadeneira Castro",
+        "gender": "male",
+        "partnerID": [75],
+        "kidsID": [[76,77,78]]
+    },
+    {
+        "id": "74",
+        "name": "Myriam Rivadeneira Castro",
+        "gender": "female",
+        "partnerID": [79],
+        "kidsID": [[80,81]]
+    },
+    {
+        "id": "75",
+        "name": "Flor",
+        "gender": "female"
+    },
+    {
+        "id": "76",
+        "name": "Cesar Rivadeneira",
+        "gender": "male",
+        "partnerID": [84],
+        "kidsID": [[85]]
+    },
+    {
+        "id": "77",
+        "name": "Miguel Rivadeneira",
+        "gender": "male",
+        "partnerID": [82],
+        "kidsID": [[83]]
+    },
+    {
+        "id": "78",
+        "name": "Franklin Rivadeneira",
+        "gender": "male",
+        "partnerID": [86],
+        "kidsID": [[87,88]]
+    },
+    {
+        "id": "79",
+        "name": "Jose Cayao",
+        "gender": "male"
+    },
+    {
+        "id": "80",
+        "name": "Veronica Cayao Rivadeneira",
+        "gender": "female"
+    },
+    {
+        "id": "81",
+        "name": "Vanesa Cayao Rivadeneira",
+        "gender": "female"
+    },
+    {
+        "id": "82",
+        "name": "Alguien",
+        "gender": "female"
+    },
+    {
+        "id": "83",
+        "name": "Mia Rivadeneira",
+        "gender": "female"
+    },
+    {
+        "id": "84",
+        "name": "Alguien",
+        "gender": "female"
+    },
+    {
+        "id": "85",
+        "name": "Jeremiah Rivadeneira",
+        "gender": "male"
+    },
+    {
+        "id": "86",
+        "name": "Alguien",
+        "gender": "female"
+    },
+    {
+        "id": "87",
+        "name": "Alguien Rivadeneira",
+        "gender": "female"
+    },
+    {
+        "id": "88",
+        "name": "Alguien Rivadeneira",
+        "gender": "female"
+    },
+    {
+        "id": "89",
+        "name": "Sebastian",
+        "gender": "male"
+    },
+    {
+        "id": "90",
+        "name": "Carmen Algo Rivadeneira",
+        "gender": "female"
+    },
+    {
+        "id": "91",
+        "name": "Alex Algo Rivadeneira",
+        "gender": "male"
+    },
+    {
+        "id": "92",
+        "name": "Juan Flores",
+        "gender": "male"
+    },
+    {
+        "id": "93",
+        "name": "GianCarlo (Gianni) Flores Rivadeneira",
+        "gender": "male"
+    },
+    {
+        "id": "94",
+        "name": "Danny Flores Rivadeneira",
+        "gender": "male"
     }
-    
-
-    
 
 
 ]

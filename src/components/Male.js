@@ -161,13 +161,26 @@ const Male = ({id}) => {
                     )) }
                     // else, handle one kid at a time. 
                     else
-                    {                    
-                        return (
-                            <Male
-                                key={key}
-                                id={item[0]}
-                            />
-                        )
+                    {      
+                        if(familyData[item[0]].gender == "male")
+                        {
+                            return (
+                                <Male
+                                    key={key}
+                                    id={item[0]}
+                                />
+                            )
+                        }    
+                        else
+                        {
+                            return(
+                                <Female 
+                                    key={key}
+                                    id = {item[0]}
+                                />
+                            )
+                        }      
+                        
                     }
                 }))}
             </div>
