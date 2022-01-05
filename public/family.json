@@ -1,0 +1,43 @@
+[
+    {
+        "id": "0",
+        "name": "Victor Rivadeneira Dominguez",
+        "gender": "male",
+        "partnerID": [1],
+        "kidsID": [3,6]
+        
+    },
+    {
+        "id": "1",
+        "name": "Mercedes Osorio",
+        "gender": "female"
+    },
+    {
+        "id": "2",
+        "name": "Teotista Caceres",
+        "gender": "female"
+    },
+    {
+        "id": "3",
+        "name": "Pedro Osorio",
+        "gender": "male"
+    },
+    {
+        "id": "4",
+        "name": "Ovidio Caceres",
+        "gender" : "male"
+    },
+    {
+        "id": "5",
+        "name": "Mayo Caceres",
+        "gender" : "male"
+    },
+    {
+        "id": "6",
+        "name": "Lola Osorio",
+        "gender": "female"
+    }
+
+
+]
+

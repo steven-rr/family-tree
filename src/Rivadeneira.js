@@ -1,19 +1,26 @@
 import React from 'react'
 import RivadeneiraCSS from './Rivadeneira.module.css'
+import Male from './components/Male'
+
+import Female from './components/Female'
+
 const Rivadeneira = () => {
     return (
         <div>
-            <div className={RivadeneiraCSS.rowClass}>
-                <div className={RivadeneiraCSS.button}>
-                    Teotista Caceres
-                </div>
-                <div className={RivadeneiraCSS.button}> 
-                    Victor Rivadeneira Dominguez 
-                </div>
-                <div className={RivadeneiraCSS.button}>
-                    Mercedes Osorio
-                </div>
+            {/* initial  */}
+            <div>
+                Rivadeneira Family Tree
             </div>
+            {/* <div className={RivadeneiraCSS.rowClass}> */}
+
+            <div className={RivadeneiraCSS.center}>
+                <Male
+                    id={0}
+                />
+            </div>
+            
+            {/* </div> */}
+            
         </div>
     )
 }
