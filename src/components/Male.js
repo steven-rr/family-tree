@@ -32,65 +32,6 @@ const Male = ({id}) => {
         
     },[])
 
-
-
-    const loopThroughKids = async(item, key) => {
-        if(item.length > 1)
-        {
-            for(var i =0; i< item.length; i ++)
-            {
-                return await (
-                    <Male
-                        key={key}
-                        id={item[i]}
-                    />
-                )
-            }
-        }
-        else
-        {                    
-            return await(
-                <Male
-                    key={key}
-                    id={item[0]}
-                />
-            )
-        }
-    }
-    const labelKids = async () =>  {
-        return Promise.all(kidData.map((item,key)=>{
-            loopThroughKids(item, key)
-        }))}
-    const loopThruPartners = async(item, key) => {
-        for(const element of partnerData) 
-        {
-            if(item.id == element)
-            {   
-                if(item.gender == "male")
-                {
-                    return await (
-                    <Male 
-                        id={item.id}
-                        key = {key}
-                    />)
-                }
-                else
-                {
-                    return await(
-                    <Female 
-                        id={item.id}
-                        key = {key}
-                    />)
-                }
-            }
-        }
-    } 
-
-    const labelPartners = async () => {
-        return Promise.all(familyData.map( (item, key) => {
-            loopThruPartners(item, key)
-        }))} 
-
     if(kidData.length != 0 )
     {
         return (
@@ -120,18 +61,26 @@ const Male = ({id}) => {
                             if(item.gender == "male")
                             {
                                 return  (
-                                <Male 
-                                        id={partnerData[i]}
-                                        key = {key}
-                                />)
+                                <div>
+                                    <Male 
+                                            id={partnerData[i]}
+                                            key = {key}
+                                    />
+                                </div>)
                             }
                             else
                             {
+                                // add links for male partners. should refine.
                                 return  (
-                                <Female 
-                                    id={partnerData[i]}
-                                    key = {key}
-                                />)
+                                    <div>
+                                        <Female 
+                                            id={partnerData[i]}
+                                            key = {key}
+                                        />
+                                        <div className={MaleCSS.links}></div>
+                                    </div>
+                                )
+                                
                             }
                         }
                     }
@@ -144,22 +93,31 @@ const Male = ({id}) => {
                     // handle array of kids.
                     if(item.length > 1)
                     {   
-                        return( item.map((item2, key2) => {
-                        if(familyData[item2].gender == "male") 
-                        {
-                            return (<Male
-                                key={key2}
-                                id={item2}
-                            />)
-                        }
-                        else
-                        {
-                            return (<Female
-                                key={key2}
-                                id={item2}
-                            />)
-                        }}
-                    )) }
+                        return( 
+                                <div>
+                                    <div className={MaleCSS.childLinks}></div>
+                                    <div className={MaleCSS.childrenContainer}>
+                                    {
+                                        item.map((item2, key2) => {
+                                        if(familyData[item2].gender == "male") 
+                                        {
+                                            return (<Male
+                                                key={key2}
+                                                id={item2}
+                                            />)
+                                        }
+                                        else
+                                        {
+                                            return (<Female
+                                                key={key2}
+                                                id={item2}
+                                            />)
+                                        }})
+                                    }
+                                    </div>
+                                </div>
+                        )
+                    }
                     // else, handle one kid at a time. 
                     else
                     {      

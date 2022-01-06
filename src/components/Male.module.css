@@ -43,3 +43,65 @@
 
 }
 
+.horizontal
+{
+    position: relative;
+}
+.horizontal::after
+{
+ 
+    position: absolute;
+    left: -49%;
+    top: 70%;
+    background: blue;
+    content: "";
+    height: 1px;
+    width: 100%;
+    border-radius: 10%;
+    display: block;
+    z-index: 0;
+}
+
+.vertical
+{
+    position: relative; 
+}
+.vertical::after
+{
+    position: absolute;
+    left: 50%;
+    top: 0%;
+    background: blue;
+    content: "";
+    height: 70%;
+    width: 1px;
+    display: block;
+    z-index: 0;
+}
+
+.links
+{
+    position: relative;
+    top: -95px;
+    right: 47px;
+    width: 100%;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+
+    border-bottom-right-radius: 10px;
+    height: 10px;
+}
+.childrenContainer
+{
+    display:flex;
+    flex-direction: row;
+}
+.childLinks
+{
+    position:relative;
+    border: 1px solid black;
+    height: 100px;
+    width: auto;
+    right: 50px;
+    bottom: 10px;
+}
