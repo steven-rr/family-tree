@@ -5,10 +5,7 @@ import {React,useEffect, useState, useContext} from 'react'
 import Female from './components/Female'
 
 const Rivadeneira = () => {
-    useEffect(() => {
-        var x = window.innerWidth;
-        window.scrollTo(x/2, 0)
-      }, [])
+    
 
     return (
         <div>

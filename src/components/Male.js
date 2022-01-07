@@ -11,7 +11,7 @@ const Male = ({id}) => {
     const [familyData, setFamilyData] = useState([])
     const [kidData, setKidData] = useState([])
     const [partnerData, setParnerData] = useState([])
-
+    const [parentWidth, setParentWidth] = useState([])
 
     useEffect( async ()=> { 
         await axios 
@@ -70,7 +70,7 @@ const Male = ({id}) => {
                             }
                             else
                             {
-                                // add links for male partners. should refine.
+                                // add links for male partners. part 1 of branch.
                                 return  (
                                     <div>
                                         <Female 
@@ -84,7 +84,6 @@ const Male = ({id}) => {
                             }
                         }
                     }
-                    
                 })}
             </div>
             {/* put in kids*/}
@@ -94,8 +93,9 @@ const Male = ({id}) => {
                     if(item.length > 1)
                     {   
                         return( 
+                                // part 2 and part 3 of the branches.
                                 <div>
-                                    <div className={MaleCSS.childLinks}></div>
+                                    <div className={MaleCSS.childLinks} style={{"width": `calc(50% - ${0}px)`}}>{key}</div>
                                     <div className={MaleCSS.childrenContainer}>
                                     {
                                         item.map((item2, key2) => {
