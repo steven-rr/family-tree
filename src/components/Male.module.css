@@ -98,10 +98,17 @@
 }
 .childLinks
 {
-    position:relative;
+    position: relative;
     border: 1px solid black;
     height: 100px;
-    width: auto;
-    right: 50px;
+    left: 0%;
     bottom: 10px;
+    width:unset;
+}
+
+.childBranches
+{
+    position: relative;
+    border: 1px solid black;
+    height: 100px;
 }

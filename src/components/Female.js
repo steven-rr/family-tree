@@ -10,7 +10,7 @@ const Female = ({id}) => {
 
     useEffect( async ()=> { 
         await axios 
-            .get('family.json')
+            .get('family-tree/family.json')
             .then ( (response) => {
                 setFamilyData(response.data);
                 if(response.data[id].kidsID)

@@ -15,7 +15,7 @@ const Male = ({id}) => {
 
     useEffect( async ()=> { 
         await axios 
-            .get('family.json')
+            .get('family-tree/family.json')
             .then ( (response) => {
                 setFamilyData(response.data);
                 if(response.data[id].kidsID)
@@ -101,17 +101,26 @@ const Male = ({id}) => {
                                         item.map((item2, key2) => {
                                         if(familyData[item2].gender == "male") 
                                         {
-                                            return (<Male
-                                                key={key2}
-                                                id={item2}
-                                            />)
+                                            return (
+                                            <div>
+                                                <div className={MaleCSS.childBranches}> </div>
+                                                <Male
+                                                    key={key2}
+                                                    id={item2}
+                                                />
+                                            </div>
+                                            )
                                         }
                                         else
                                         {
-                                            return (<Female
-                                                key={key2}
-                                                id={item2}
-                                            />)
+                                            return (
+                                                <div>
+                                                    <div className={MaleCSS.childBranches}> </div>
+                                                    <Female
+                                                    key={key2}
+                                                    id={item2}
+                                                    />
+                                                </div>)
                                         }})
                                     }
                                     </div>
