@@ -12,6 +12,39 @@ import {
 } from "../data/familyData";
 import "./FamilyTree.css";
 
+/**
+ * Compute the full ancestry path from a person up to the root.
+ * Returns a Set of person IDs on the path.
+ */
+function getAncestryPath(personId) {
+  const path = new Set();
+  const queue = [personId];
+  while (queue.length > 0) {
+    const id = queue.shift();
+    if (path.has(id)) continue;
+    path.add(id);
+    const parents = getParents(id);
+    parents.forEach((pid) => {
+      if (!path.has(pid)) queue.push(pid);
+    });
+  }
+  return path;
+}
+
+/**
+ * Get all union IDs that connect people on the ancestry path.
+ */
+function getPathUnionIds(pathIds, allUnions) {
+  const ids = new Set();
+  allUnions.forEach((u) => {
+    const union = u.union;
+    if (pathIds.has(union.partner1) && pathIds.has(union.partner2)) {
+      ids.add(union.id);
+    }
+  });
+  return ids;
+}
+
 function FamilyTree() {
   const navigate = useNavigate();
   const svgRef = useRef(null);
@@ -32,6 +65,16 @@ function FamilyTree() {
   const [searchOpen, setSearchOpen] = useState(false);
   const searchInputRef = useRef(null);
 
+  // Ancestry path highlight state
+  const [ancestryTarget, setAncestryTarget] = useState(null);
+  const [tappedNode, setTappedNode] = useState(null);
+
+  // Detect touch device
+  const isTouchDevice = useRef(false);
+  useEffect(() => {
+    isTouchDevice.current = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+  }, []);
+
   // Compute layout with collapsed IDs
   const layout = useMemo(
     () => computeLayout("victor-rivadeneira", collapsedIds),
@@ -49,6 +92,17 @@ function FamilyTree() {
     });
     return map;
   }, [layout]);
+
+  // Compute ancestry path for the active target
+  const ancestryPath = useMemo(() => {
+    if (!ancestryTarget) return null;
+    return getAncestryPath(ancestryTarget);
+  }, [ancestryTarget]);
+
+  const pathUnionIds = useMemo(() => {
+    if (!ancestryPath) return null;
+    return getPathUnionIds(ancestryPath, layout.unions);
+  }, [ancestryPath, layout.unions]);
 
   // Search results
   const searchResults = useMemo(() => {
@@ -190,9 +244,50 @@ function FamilyTree() {
     };
   }, [handleWheel, handleTouchMove]);
 
+  // Node click/tap handler
   const handleNodeClick = (personId) => {
-    navigate(`/person/${personId}`);
+    if (isTouchDevice.current) {
+      // Mobile: first tap highlights ancestry, second tap navigates
+      if (tappedNode === personId) {
+        // Second tap — navigate
+        setTappedNode(null);
+        setAncestryTarget(null);
+        navigate(`/person/${personId}`);
+      } else {
+        // First tap — show ancestry path
+        setTappedNode(personId);
+        setAncestryTarget(personId);
+      }
+    } else {
+      // Desktop: click navigates
+      navigate(`/person/${personId}`);
+    }
   };
+
+  // Desktop hover: show ancestry path
+  const handleNodeEnter = (personId) => {
+    setHoveredNode(personId);
+    if (!isTouchDevice.current) {
+      setAncestryTarget(personId);
+    }
+  };
+
+  const handleNodeLeave = () => {
+    setHoveredNode(null);
+    if (!isTouchDevice.current) {
+      setAncestryTarget(null);
+    }
+  };
+
+  // Clear mobile tap when tapping empty space
+  const handleBackgroundClick = useCallback((e) => {
+    if (!e.target.closest(".tree-node") && !e.target.closest(".collapse-toggle")) {
+      if (tappedNode) {
+        setTappedNode(null);
+        setAncestryTarget(null);
+      }
+    }
+  }, [tappedNode]);
 
   // Zoom controls
   const zoomIn = () =>
@@ -255,8 +350,6 @@ function FamilyTree() {
     // Use requestAnimationFrame to wait for the layout to recompute
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        // We need the updated layout, but since we're in a closure, we'll
-        // set highlighted and let the effect handle centering
         setHighlightedId(personId);
         setSearchQuery("");
         setSearchOpen(false);
@@ -308,6 +401,8 @@ function FamilyTree() {
   };
   const expandAll = () => setCollapsedIds(new Set());
 
+  const isPathActive = ancestryPath !== null;
+
   return (
     <div
       className="family-tree-container"
@@ -318,7 +413,15 @@ function FamilyTree() {
       onMouseLeave={handleMouseUp}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      onClick={handleBackgroundClick}
     >
+      {/* Mobile ancestry hint */}
+      {tappedNode && (
+        <div className="ancestry-hint">
+          Tap again to view profile &middot; Tap elsewhere to dismiss
+        </div>
+      )}
+
       {/* Search Bar */}
       <div className={`search-bar ${searchOpen ? "open" : ""}`}>
         {searchOpen ? (
@@ -451,20 +554,16 @@ function FamilyTree() {
           </div>
         </div>
         <div className="legend-section">
-          <div className="legend-title">Lines</div>
+          <div className="legend-title">Interaction</div>
           <div className="legend-item">
-            <span className="legend-line"></span> Marriage
-          </div>
-          <div className="legend-item">
-            <span className="legend-line legend-child-line"></span> Parent-Child
+            <span className="legend-line legend-hover-line"></span> Hover = ancestry
           </div>
         </div>
       </div>
 
       {/* Hint */}
       <div className="tree-hint">
-        Scroll to zoom &middot; Drag to pan &middot; Click a person to view
-        profile &middot; Ctrl+F to search
+        Scroll to zoom &middot; Drag to pan &middot; Hover to trace ancestry &middot; Click to view profile &middot; Ctrl+F to search
       </div>
 
       <svg
@@ -479,6 +578,10 @@ function FamilyTree() {
         >
           {/* Connector lines */}
           {layout.connectors.map((c, i) => {
+            const isOnPath = isPathActive && pathUnionIds && c.unionId && pathUnionIds.has(c.unionId);
+            const isChildOnPath = isPathActive && c.type === "child-line" && pathUnionIds && c.unionId && pathUnionIds.has(c.unionId);
+            const dimmed = isPathActive && !isOnPath && !isChildOnPath;
+
             if (c.type === "partner") {
               return (
                 <line
@@ -487,7 +590,7 @@ function FamilyTree() {
                   y1={c.y1}
                   x2={c.x2}
                   y2={c.y2}
-                  className="connector-partner"
+                  className={`connector-partner branch-line-${c.branch || "root"} ${dimmed ? "dimmed" : ""} ${isOnPath ? "on-path" : ""}`}
                 />
               );
             }
@@ -498,23 +601,85 @@ function FamilyTree() {
                 y1={c.y1}
                 x2={c.x2}
                 y2={c.y2}
-                className="connector-child"
+                className={`connector-child branch-line-${c.branch || "root"} ${dimmed ? "dimmed" : ""}`}
+              />
+            );
+          })}
+
+          {/* Ancestry path glow lines (drawn on top of regular lines) */}
+          {isPathActive && layout.connectors.map((c, i) => {
+            // Determine if this connector is on the ancestry path
+            // For child-line connectors, check if any endpoint is on the path
+            let isOnAncestryPath = false;
+            if (c.type === "partner" && pathUnionIds && pathUnionIds.has(c.unionId)) {
+              isOnAncestryPath = true;
+            }
+            if (c.type === "child-line") {
+              // Check if the union that spawned this connector has both partners on path
+              if (pathUnionIds && c.unionId) {
+                // We need to check if this specific child line connects path members
+                // The child-line connectors include the vertical drop from union + horizontal bar + drops to children
+                // We want to highlight the ones that connect path members
+                const union = layout.unions.find((u) => u.id === c.unionId);
+                if (union && pathUnionIds.has(c.unionId)) {
+                  // Check if any child endpoint is on the path
+                  const connectedNodes = layout.nodes.filter((n) => {
+                    const cx = n.x + NODE_WIDTH / 2;
+                    return (Math.abs(cx - c.x1) < 1 || Math.abs(cx - c.x2) < 1) && ancestryPath.has(n.id);
+                  });
+                  if (connectedNodes.length > 0 || c.x1 === c.x2) {
+                    // Vertical lines from union or to a path member
+                    isOnAncestryPath = true;
+                  }
+                }
+              }
+            }
+
+            if (!isOnAncestryPath) return null;
+            return (
+              <line
+                key={`glow-${i}`}
+                x1={c.x1}
+                y1={c.y1}
+                x2={c.x2}
+                y2={c.y2}
+                className={`connector-glow branch-glow-${c.branch || "root"}`}
               />
             );
           })}
 
           {/* Union dots */}
-          {layout.unions.map((u) => (
-            <g key={u.id} className="union-dot-group">
-              <circle cx={u.x} cy={u.y} r={6} className="union-dot" />
-            </g>
-          ))}
+          {layout.unions.map((u) => {
+            const isOnPath = isPathActive && pathUnionIds && pathUnionIds.has(u.id);
+            const dimmed = isPathActive && !isOnPath;
+            return (
+              <g key={u.id} className="union-dot-group">
+                <circle
+                  cx={u.x}
+                  cy={u.y}
+                  r={6}
+                  className={`union-dot ${dimmed ? "dimmed" : ""} ${isOnPath ? "on-path" : ""}`}
+                />
+                {isOnPath && (
+                  <circle
+                    cx={u.x}
+                    cy={u.y}
+                    r={8}
+                    className="union-dot-glow"
+                  />
+                )}
+              </g>
+            );
+          })}
 
           {/* Person nodes */}
           {layout.nodes.map((node) => {
             const isMale = node.person?.gender === "male";
             const isHovered = hoveredNode === node.id;
             const isHighlighted = highlightedId === node.id;
+            const isOnPath = isPathActive && ancestryPath.has(node.id);
+            const isTarget = ancestryTarget === node.id;
+            const dimmed = isPathActive && !isOnPath;
             const fullName = getDisplayName(node.id);
             const nameParts = fullName.split(" ");
             const branch = branches[node.id] || "unknown";
@@ -524,11 +689,11 @@ function FamilyTree() {
             return (
               <g
                 key={node.id}
-                className={`tree-node ${isMale ? "male" : "female"} branch-${branch} ${isHovered ? "hovered" : ""} ${isHighlighted ? "highlighted" : ""}`}
+                className={`tree-node ${isMale ? "male" : "female"} branch-${branch} ${isHovered ? "hovered" : ""} ${isHighlighted ? "highlighted" : ""} ${isOnPath ? "on-ancestry-path" : ""} ${isTarget ? "ancestry-target" : ""} ${dimmed ? "dimmed" : ""}`}
                 transform={`translate(${node.x}, ${node.y})`}
                 onClick={() => handleNodeClick(node.id)}
-                onMouseEnter={() => setHoveredNode(node.id)}
-                onMouseLeave={() => setHoveredNode(null)}
+                onMouseEnter={() => handleNodeEnter(node.id)}
+                onMouseLeave={handleNodeLeave}
               >
                 {/* Node background */}
                 <rect
@@ -540,6 +705,19 @@ function FamilyTree() {
                   ry={isMale ? 8 : 30}
                   className="node-bg"
                 />
+
+                {/* Ancestry path glow ring */}
+                {isOnPath && (
+                  <rect
+                    x={-3}
+                    y={-3}
+                    width={NODE_WIDTH + 6}
+                    height={NODE_HEIGHT + 6}
+                    rx={isMale ? 10 : 32}
+                    ry={isMale ? 10 : 32}
+                    className={`ancestry-glow branch-glow-ring-${branch}`}
+                  />
+                )}
 
                 {/* Branch indicator bar at top */}
                 <rect
@@ -636,7 +814,7 @@ function FamilyTree() {
                   </g>
                 )}
 
-                {/* Highlight pulse ring */}
+                {/* Highlight pulse ring (search) */}
                 {isHighlighted && (
                   <rect
                     x={-4}
