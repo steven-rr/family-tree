@@ -251,7 +251,7 @@ export const people = {
   "dante": {
     id: "dante",
     firstName: "Dante",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
@@ -261,7 +261,7 @@ export const people = {
   "isolina": {
     id: "isolina",
     firstName: "Isolina",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
@@ -275,7 +275,7 @@ export const people = {
   "marianella": {
     id: "marianella",
     firstName: "Marianella",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
@@ -285,7 +285,7 @@ export const people = {
   "eliana": {
     id: "eliana",
     firstName: "Eliana",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
@@ -295,7 +295,7 @@ export const people = {
   "ricardo": {
     id: "ricardo",
     firstName: "Ricardo",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
@@ -345,7 +345,7 @@ export const people = {
   "mary-nino": {
     id: "mary-nino",
     firstName: "Mary",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
@@ -355,7 +355,7 @@ export const people = {
   "jorge-nino": {
     id: "jorge-nino",
     firstName: "Jorge",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
@@ -365,7 +365,7 @@ export const people = {
   "victor-nino": {
     id: "victor-nino",
     firstName: "Victor",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
@@ -379,7 +379,7 @@ export const people = {
   "rosa-andrea": {
     id: "rosa-andrea",
     firstName: "Rosa",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
@@ -389,7 +389,7 @@ export const people = {
   "emelina": {
     id: "emelina",
     firstName: "Emelina",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
@@ -403,7 +403,7 @@ export const people = {
   "violeta": {
     id: "violeta",
     firstName: "Violeta",
-    lastName: "",
+    lastName: "Osorio",
     gender: "female",
     birthYear: null,
     deathYear: null,
@@ -437,7 +437,7 @@ export const people = {
   "chela-osorio": {
     id: "chela-osorio",
     firstName: "Chela",
-    lastName: "",
+    lastName: "Osorio",
     gender: "female",
     birthYear: null,
     deathYear: null,
@@ -447,7 +447,7 @@ export const people = {
   "victor-osorio": {
     id: "victor-osorio",
     firstName: "Victor",
-    lastName: "",
+    lastName: "Osorio",
     gender: "male",
     birthYear: null,
     deathYear: null,
@@ -457,7 +457,7 @@ export const people = {
   "nestor-osorio": {
     id: "nestor-osorio",
     firstName: "Nestor",
-    lastName: "",
+    lastName: "Osorio",
     gender: "male",
     birthYear: null,
     deathYear: null,
@@ -500,12 +500,12 @@ export const people = {
   },
   "second-wife-pedro-r": {
     id: "second-wife-pedro-r",
-    firstName: "Unknown",
+    firstName: "Vilma",
     lastName: "",
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Second wife of Pedro Rivadeneira. Mother of Rosa Rivadeneira.",
+    bio: "Second wife of Pedro Rivadeneira. Mother of Rosa Rivadeneira. Last name unknown.",
     photo: null,
   },
   "mr-cespedes": {
@@ -559,7 +559,7 @@ export const people = {
   "cesar": {
     id: "cesar",
     firstName: "Cesar",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
@@ -569,7 +569,7 @@ export const people = {
   "miguel": {
     id: "miguel",
     firstName: "Miguel",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
@@ -579,7 +579,7 @@ export const people = {
   "franklin": {
     id: "franklin",
     firstName: "Franklin",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
@@ -593,7 +593,7 @@ export const people = {
   "veronica": {
     id: "veronica",
     firstName: "Veronica",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
@@ -603,7 +603,7 @@ export const people = {
   "vanessa": {
     id: "vanessa",
     firstName: "Vanessa",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
@@ -618,7 +618,7 @@ export const people = {
   "patricia": {
     id: "patricia",
     firstName: "Patricia",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
@@ -628,7 +628,7 @@ export const people = {
   "pedro-rivadeneira-jr": {
     id: "pedro-rivadeneira-jr",
     firstName: "Pedro",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
@@ -638,7 +638,7 @@ export const people = {
   "roberto": {
     id: "roberto",
     firstName: "Roberto",
-    lastName: "",
+    lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
