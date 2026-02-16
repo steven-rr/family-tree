@@ -17,7 +17,7 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Patriarch of the Rivadeneira family. Had two marriages which connected two family lines.",
+    bio: "Patriarch of the Rivadeneira family. Had two marriages — first to Teotista Caceres (7 children), then to an Osorio woman (4 children).",
     photo: null,
   },
   "teotista-caceres": {
@@ -27,7 +27,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "First wife of Victor Rivadeneira.",
+    bio: "First wife of Victor Rivadeneira. Together they had seven children: Cecilia, Mayo, Ovidio, Nino, Sulpi, Gonzalo, and Andrea.",
     photo: null,
   },
   "xxx-osorio": {
@@ -37,12 +37,243 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Second wife of Victor Rivadeneira.",
+    bio: "Second wife of Victor Rivadeneira. Together they had four children: Ernestina, Casamira, Pedro, and Dolores.",
     photo: null,
   },
 
-  // === GRANDPARENTS ===
-  // Paternal grandfather (son of Victor + Teotista)
+  // === VICTOR + TEOTISTA'S CHILDREN ===
+  "cecilia-rivadeneira": {
+    id: "cecilia-rivadeneira",
+    firstName: "Cecilia",
+    lastName: "Rivadeneira",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Victor Rivadeneira and Teotista Caceres. Had two children, Dante and Isolina, with an unknown partner.",
+    photo: null,
+  },
+  "mayo-rivadeneira": {
+    id: "mayo-rivadeneira",
+    firstName: "Mayo",
+    lastName: "Rivadeneira",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Victor Rivadeneira and Teotista Caceres.",
+    photo: null,
+  },
+  "ovidio-rivadeneira": {
+    id: "ovidio-rivadeneira",
+    firstName: "Ovidio",
+    lastName: "Rivadeneira",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Victor Rivadeneira and Teotista Caceres.",
+    photo: null,
+  },
+  "nino-rivadeneira": {
+    id: "nino-rivadeneira",
+    firstName: "Nino",
+    lastName: "Rivadeneira",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Victor Rivadeneira and Teotista Caceres.",
+    photo: null,
+  },
+  "sulpi-rivadeneira": {
+    id: "sulpi-rivadeneira",
+    firstName: "Sulpi",
+    lastName: "Rivadeneira",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Victor Rivadeneira and Teotista Caceres.",
+    photo: null,
+  },
+  "gonzalo-rivadeneira": {
+    id: "gonzalo-rivadeneira",
+    firstName: "Gonzalo",
+    lastName: "Rivadeneira",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Victor Rivadeneira and Teotista Caceres.",
+    photo: null,
+  },
+  "andrea-rivadeneira": {
+    id: "andrea-rivadeneira",
+    firstName: "Andrea",
+    lastName: "Rivadeneira",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Victor Rivadeneira and Teotista Caceres.",
+    photo: null,
+  },
+
+  // === VICTOR + OSORIO'S CHILDREN ===
+  "ernestina-osorio": {
+    id: "ernestina-osorio",
+    firstName: "Ernestina",
+    lastName: "Osorio",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Victor Rivadeneira and Unknown Osorio. Had at least two children, but their names and her spouse are unknown.",
+    photo: null,
+  },
+  "casamira-osorio": {
+    id: "casamira-osorio",
+    firstName: "Casamira",
+    lastName: "Osorio",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Victor Rivadeneira and Unknown Osorio. Had children including Violeta and at least one other whose name is not remembered.",
+    photo: null,
+  },
+  "pedro-osorio": {
+    id: "pedro-osorio",
+    firstName: "Pedro",
+    lastName: "Osorio",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Victor Rivadeneira and Unknown Osorio. Maternal grandfather. One of his spouses was Rosa Lizarraga, with whom he had five children: Pedro Rivadeneira, Enma Flores, Chela, Victor, and Nestor.",
+    photo: null,
+  },
+  "dolores-osorio": {
+    id: "dolores-osorio",
+    firstName: "Dolores",
+    lastName: "Osorio",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Victor Rivadeneira and Unknown Osorio. Had no biological children of her own, but raised Felicia.",
+    photo: null,
+  },
+
+  // === CECILIA'S FAMILY ===
+  "unknown-cecilia-spouse": {
+    id: "unknown-cecilia-spouse",
+    firstName: "Unknown",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Partner of Cecilia Rivadeneira. Name unknown.",
+    photo: null,
+  },
+  "dante": {
+    id: "dante",
+    firstName: "Dante",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Cecilia Rivadeneira. Grandson of Victor Rivadeneira and Teotista Caceres.",
+    photo: null,
+  },
+  "isolina": {
+    id: "isolina",
+    firstName: "Isolina",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Cecilia Rivadeneira. Granddaughter of Victor Rivadeneira and Teotista Caceres.",
+    photo: null,
+  },
+
+  // === CASAMIRA'S FAMILY ===
+  "unknown-casamira-spouse": {
+    id: "unknown-casamira-spouse",
+    firstName: "Unknown",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Partner of Casamira Osorio. Name unknown.",
+    photo: null,
+  },
+  "violeta": {
+    id: "violeta",
+    firstName: "Violeta",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Casamira Osorio. Granddaughter of Victor Rivadeneira and Unknown Osorio.",
+    photo: null,
+  },
+
+  // === MATERNAL GRANDPARENTS ===
+  "rosa-lizarraga": {
+    id: "rosa-lizarraga",
+    firstName: "Rosa",
+    lastName: "Lizarraga",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Maternal grandmother. Wife of Pedro Osorio. Mother of Pedro Rivadeneira, Enma Flores, Chela, Victor, and Nestor.",
+    photo: null,
+  },
+
+  // === PEDRO OSORIO + ROSA LIZARRAGA'S CHILDREN ===
+  "pedro-rivadeneira": {
+    id: "pedro-rivadeneira",
+    firstName: "Pedro",
+    lastName: "Rivadeneira",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Pedro Osorio and Rosa Lizarraga. Sibling of Enma, Chela, Victor, and Nestor.",
+    photo: null,
+  },
+  "enma-flores": {
+    id: "enma-flores",
+    firstName: "Enma",
+    lastName: "Flores",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Mother. Daughter of Pedro Osorio and Rosa Lizarraga. Had two marriages. Sibling of Pedro Rivadeneira, Chela, Victor, and Nestor.",
+    photo: null,
+  },
+  "chela-osorio": {
+    id: "chela-osorio",
+    firstName: "Chela",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Pedro Osorio and Rosa Lizarraga. Sibling of Pedro Rivadeneira, Enma, Victor, and Nestor.",
+    photo: null,
+  },
+  "victor-osorio": {
+    id: "victor-osorio",
+    firstName: "Victor",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Pedro Osorio and Rosa Lizarraga. Sibling of Pedro Rivadeneira, Enma, Chela, and Nestor.",
+    photo: null,
+  },
+  "nestor-osorio": {
+    id: "nestor-osorio",
+    firstName: "Nestor",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Pedro Osorio and Rosa Lizarraga. Sibling of Pedro Rivadeneira, Enma, Chela, and Victor.",
+    photo: null,
+  },
+
+  // === PATERNAL GRANDPARENTS (placeholder — exact identity among Victor+Teotista's children TBD) ===
   "grandfather-rivadeneira": {
     id: "grandfather-rivadeneira",
     firstName: "Grandfather",
@@ -50,7 +281,7 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Paternal grandfather. Son of Victor Rivadeneira and Teotista Caceres.",
+    bio: "Paternal grandfather. Son of Victor Rivadeneira and Teotista Caceres (may be one of the seven named siblings — exact identity to be confirmed).",
     photo: null,
   },
   "grandmother-rivadeneira": {
@@ -61,27 +292,6 @@ export const people = {
     birthYear: null,
     deathYear: null,
     bio: "Paternal grandmother. Wife of Grandfather Rivadeneira.",
-    photo: null,
-  },
-  // Maternal grandfather (son of Victor + Osorio) — half-sibling to paternal grandfather
-  "grandfather-flores": {
-    id: "grandfather-flores",
-    firstName: "Grandfather",
-    lastName: "Flores",
-    gender: "male",
-    birthYear: null,
-    deathYear: null,
-    bio: "Maternal grandfather. Son of Victor Rivadeneira and Unknown Osorio. Half-sibling to Grandfather Rivadeneira.",
-    photo: null,
-  },
-  "grandmother-flores": {
-    id: "grandmother-flores",
-    firstName: "Grandmother",
-    lastName: "Flores",
-    gender: "female",
-    birthYear: null,
-    deathYear: null,
-    bio: "Maternal grandmother. Wife of Grandfather Flores.",
     photo: null,
   },
 
@@ -104,16 +314,6 @@ export const people = {
     birthYear: null,
     deathYear: null,
     bio: "First wife of Jorge Rivadeneira Sr.",
-    photo: null,
-  },
-  "enma-flores": {
-    id: "enma-flores",
-    firstName: "Enma",
-    lastName: "Flores",
-    gender: "female",
-    birthYear: null,
-    deathYear: null,
-    bio: "Mother. Daughter of Grandfather Flores. Had two marriages.",
     photo: null,
   },
   "luis-flores": {
@@ -177,35 +377,73 @@ export const people = {
  * Each union links two partners and their children.
  */
 export const unions = {
-  // Great-grandparent unions
+  // === Great-grandparent unions ===
   "union-victor-teotista": {
     id: "union-victor-teotista",
     partner1: "victor-rivadeneira",
     partner2: "teotista-caceres",
-    children: ["grandfather-rivadeneira"],
+    children: [
+      "cecilia-rivadeneira",
+      "mayo-rivadeneira",
+      "ovidio-rivadeneira",
+      "nino-rivadeneira",
+      "sulpi-rivadeneira",
+      "gonzalo-rivadeneira",
+      "andrea-rivadeneira",
+      "grandfather-rivadeneira",
+    ],
   },
   "union-victor-osorio": {
     id: "union-victor-osorio",
     partner1: "victor-rivadeneira",
     partner2: "xxx-osorio",
-    children: ["grandfather-flores"],
+    children: [
+      "ernestina-osorio",
+      "casamira-osorio",
+      "pedro-osorio",
+      "dolores-osorio",
+    ],
   },
 
-  // Grandparent unions
+  // === Cecilia's family ===
+  "union-cecilia": {
+    id: "union-cecilia",
+    partner1: "cecilia-rivadeneira",
+    partner2: "unknown-cecilia-spouse",
+    children: ["dante", "isolina"],
+  },
+
+  // === Casamira's family ===
+  "union-casamira": {
+    id: "union-casamira",
+    partner1: "casamira-osorio",
+    partner2: "unknown-casamira-spouse",
+    children: ["violeta"],
+  },
+
+  // === Maternal grandparent union ===
+  "union-pedro-rosa": {
+    id: "union-pedro-rosa",
+    partner1: "pedro-osorio",
+    partner2: "rosa-lizarraga",
+    children: [
+      "pedro-rivadeneira",
+      "enma-flores",
+      "chela-osorio",
+      "victor-osorio",
+      "nestor-osorio",
+    ],
+  },
+
+  // === Paternal grandparent union ===
   "union-grandfather-rivadeneira": {
     id: "union-grandfather-rivadeneira",
     partner1: "grandfather-rivadeneira",
     partner2: "grandmother-rivadeneira",
     children: ["jorge-rivadeneira-sr"],
   },
-  "union-grandfather-flores": {
-    id: "union-grandfather-flores",
-    partner1: "grandfather-flores",
-    partner2: "grandmother-flores",
-    children: ["enma-flores"],
-  },
 
-  // Parent unions
+  // === Parent unions ===
   "union-jorge-first-wife": {
     id: "union-jorge-first-wife",
     partner1: "jorge-rivadeneira-sr",
