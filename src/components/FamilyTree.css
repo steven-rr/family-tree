@@ -199,25 +199,111 @@
 }
 
 /* ============================
-   CONNECTOR LINES
+   CONNECTOR LINES — BRANCH COLORED
    ============================ */
 .connector-partner {
   stroke: var(--union-color);
   stroke-width: 2.5;
   stroke-dasharray: 6, 4;
   opacity: 0.7;
+  transition: opacity 0.3s;
 }
 
 .connector-child {
   stroke: var(--border-light);
   stroke-width: 2;
   opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+/* Branch-colored connector lines */
+.branch-line-teotista.connector-child {
+  stroke: #4a9eff;
+  opacity: 0.35;
+}
+
+.branch-line-osorio.connector-child {
+  stroke: #d4a853;
+  opacity: 0.35;
+}
+
+.branch-line-both.connector-child {
+  stroke: #b388ff;
+  opacity: 0.35;
+}
+
+.branch-line-teotista.connector-partner {
+  stroke: #4a9eff;
+  opacity: 0.5;
+}
+
+.branch-line-osorio.connector-partner {
+  stroke: #d4a853;
+  opacity: 0.5;
+}
+
+.branch-line-both.connector-partner {
+  stroke: #b388ff;
+  opacity: 0.5;
+}
+
+/* Dimmed state when ancestry path is active */
+.connector-partner.dimmed,
+.connector-child.dimmed {
+  opacity: 0.1;
+}
+
+.connector-partner.on-path {
+  opacity: 1;
+  stroke-width: 3;
+}
+
+/* Ancestry path glow lines (overlay) */
+.connector-glow {
+  stroke-width: 4;
+  opacity: 0.6;
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.branch-glow-teotista {
+  stroke: #4a9eff;
+}
+
+.branch-glow-osorio {
+  stroke: #d4a853;
+}
+
+.branch-glow-both {
+  stroke: #b388ff;
+}
+
+.branch-glow-root {
+  stroke: #6b7185;
 }
 
 /* Union dots */
 .union-dot {
   fill: var(--union-color);
   opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.union-dot.dimmed {
+  opacity: 0.15;
+}
+
+.union-dot.on-path {
+  opacity: 1;
+  fill: #fff;
+}
+
+.union-dot-glow {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 /* ============================
@@ -225,7 +311,7 @@
    ============================ */
 .tree-node {
   cursor: pointer;
-  transition: transform 0.15s ease;
+  transition: opacity 0.3s ease;
 }
 
 .tree-node .node-bg {
@@ -255,6 +341,71 @@
 .tree-node.female.hovered .node-bg,
 .tree-node.female:hover .node-bg {
   filter: drop-shadow(0 0 12px rgba(232, 117, 138, 0.2));
+}
+
+/* Dimmed nodes when ancestry path is active */
+.tree-node.dimmed {
+  opacity: 0.2;
+}
+
+.tree-node.dimmed .node-bg {
+  filter: none;
+}
+
+/* Nodes on the ancestry path */
+.tree-node.on-ancestry-path {
+  opacity: 1;
+}
+
+.tree-node.on-ancestry-path .node-bg {
+  stroke-opacity: 1;
+  stroke-width: 2;
+}
+
+/* The hovered/tapped target node */
+.tree-node.ancestry-target .node-bg {
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.3));
+}
+
+/* Ancestry glow ring around path nodes */
+.ancestry-glow {
+  fill: none;
+  stroke-width: 2;
+  opacity: 0.5;
+  pointer-events: none;
+  animation: ancestry-pulse 2s ease-in-out infinite;
+}
+
+.branch-glow-ring-teotista {
+  stroke: #4a9eff;
+}
+
+.branch-glow-ring-osorio {
+  stroke: #d4a853;
+}
+
+.branch-glow-ring-both {
+  stroke: #b388ff;
+}
+
+.branch-glow-ring-root {
+  stroke: #8899aa;
+}
+
+.branch-glow-ring-unknown {
+  stroke: #6b7185;
+}
+
+@keyframes ancestry-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    stroke-width: 2;
+  }
+  50% {
+    opacity: 0.8;
+    stroke-width: 2.5;
+  }
 }
 
 .node-icon {
@@ -526,6 +677,43 @@
   background: var(--border-light);
 }
 
+.legend-hover-line {
+  background: linear-gradient(90deg, #4a9eff, #d4a853);
+  height: 3px;
+  border-radius: 1.5px;
+}
+
+/* ============================
+   ANCESTRY HINT (MOBILE)
+   ============================ */
+.ancestry-hint {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: 1px solid var(--accent-blue);
+  border-radius: var(--radius-xl);
+  padding: 8px 18px;
+  z-index: 20;
+  white-space: nowrap;
+  box-shadow: var(--shadow-glow-blue);
+  animation: hint-fade-in 0.2s ease;
+}
+
+@keyframes hint-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
 /* ============================
    HINT TEXT
    ============================ */
@@ -590,6 +778,12 @@
   .zoom-controls button svg {
     width: 16px;
     height: 16px;
+  }
+
+  .ancestry-hint {
+    font-size: 11px;
+    padding: 6px 14px;
+    bottom: 60px;
   }
 }
 
