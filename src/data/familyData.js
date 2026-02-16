@@ -712,9 +712,44 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Jorge Rivadeneira Sr. and Aracely Diaz. Half-sibling to Steven and Karina.",
+    bio: "Daughter of Jorge Rivadeneira Sr. and Aracely Diaz. Half-sibling to Steven and Karina. Married Randy Uetz. Mother of Gabriel and Grace.",
     photo: null,
   },
+  "randy-uetz": {
+    id: "randy-uetz",
+    firstName: "Randy",
+    lastName: "Uetz",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Husband of Ivette Rivadeneira. Father of Gabriel and Grace.",
+    photo: null,
+  },
+
+  // ============================================================
+  // GENERATION 4 — IVETTE + RANDY'S CHILDREN
+  // ============================================================
+  "gabriel-uetz": {
+    id: "gabriel-uetz",
+    firstName: "Gabriel",
+    lastName: "Uetz",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Ivette Rivadeneira and Randy Uetz.",
+    photo: null,
+  },
+  "grace-uetz": {
+    id: "grace-uetz",
+    firstName: "Grace",
+    lastName: "Uetz",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Ivette Rivadeneira and Randy Uetz.",
+    photo: null,
+  },
+
   // From Jorge Sr. + Enma
   "steven-rivadeneira": {
     id: "steven-rivadeneira",
@@ -889,6 +924,14 @@ export const unions = {
     partner2: "enma-flores",
     children: ["steven-rivadeneira", "karina-rivadeneira"],
   },
+  // === Ivette + Randy ===
+  "union-ivette-randy": {
+    id: "union-ivette-randy",
+    partner1: "ivette-rivadeneira",
+    partner2: "randy-uetz",
+    children: ["gabriel-uetz", "grace-uetz"],
+  },
+
   "union-enma-luis": {
     id: "union-enma-luis",
     partner1: "enma-flores",
