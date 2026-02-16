@@ -27,9 +27,9 @@ const COUPLE_GAP = 30;
  * Build the full layout starting from root.
  * Returns { nodes, unions, connectors, width, height }
  */
-export function computeLayout(rootId = "victor-rivadeneira") {
+export function computeLayout(rootId = "victor-rivadeneira", collapsedIds = new Set()) {
   // Step 1: Assign generations via BFS
-  const generations = assignGenerations(rootId);
+  const generations = assignGenerations(rootId, collapsedIds);
   const maxGen = Math.max(...Object.values(generations));
 
   // Group people by generation
@@ -179,7 +179,7 @@ export function computeLayout(rootId = "victor-rivadeneira") {
  * (Enma's 2nd husband) get discovered even when Enma is first
  * encountered as Jorge's partner.
  */
-function assignGenerations(rootId) {
+function assignGenerations(rootId, collapsedIds = new Set()) {
   const gens = {};
   const visited = new Set();
   const queue = [{ id: rootId, gen: 0 }];
@@ -197,18 +197,24 @@ function assignGenerations(rootId) {
         // Queue partner so their unions get explored too
         queue.push({ id: partnerId, gen });
       }
-      u.children.forEach((childId) => {
-        if (!visited.has(childId)) {
-          queue.push({ id: childId, gen: gen + 1 });
-        }
-      });
+      // Only visit children if neither partner in this union is collapsed
+      if (!collapsedIds.has(u.partner1) && !collapsedIds.has(u.partner2)) {
+        u.children.forEach((childId) => {
+          if (!visited.has(childId)) {
+            queue.push({ id: childId, gen: gen + 1 });
+          }
+        });
+      }
     });
   }
 
-  // Catch-all for disconnected people
+  // Catch-all for disconnected people — only include if not hidden by collapse
   Object.keys(people).forEach((pid) => {
     if (!(pid in gens)) {
-      gens[pid] = 0;
+      // Don't force-include people hidden by collapsed branches
+      if (collapsedIds.size === 0) {
+        gens[pid] = 0;
+      }
     }
   });
 

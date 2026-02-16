@@ -1011,3 +1011,74 @@ export function getAllPeople() {
 export function getAllUnions() {
   return Object.values(unions);
 }
+
+/** Compute branch membership for color-coding (teotista vs osorio side) */
+export function computeBranches() {
+  const branches = {};
+  const visited = new Set();
+  const queue = ["victor-rivadeneira"];
+
+  branches["victor-rivadeneira"] = "root";
+  branches["teotista-caceres"] = "teotista";
+  branches["xxx-osorio"] = "osorio";
+
+  while (queue.length > 0) {
+    const id = queue.shift();
+    if (visited.has(id)) continue;
+    visited.add(id);
+
+    const personUnions = getUnionsForPerson(id);
+    personUnions.forEach((u) => {
+      const partnerId = u.partner1 === id ? u.partner2 : u.partner1;
+
+      let childBranch;
+      if (u.id === "union-victor-teotista") {
+        childBranch = "teotista";
+      } else if (u.id === "union-victor-osorio") {
+        childBranch = "osorio";
+      } else {
+        const b1 = branches[u.partner1];
+        const b2 = branches[u.partner2];
+        if (
+          b1 && b2 &&
+          b1 !== b2 &&
+          b1 !== "root" && b2 !== "root" &&
+          b1 !== "both" && b2 !== "both"
+        ) {
+          childBranch = "both";
+        } else if (b1 === "both" || b2 === "both") {
+          childBranch = "both";
+        } else {
+          childBranch =
+            (b1 && b1 !== "root" ? b1 : null) ||
+            (b2 && b2 !== "root" ? b2 : null) ||
+            "unknown";
+        }
+      }
+
+      if (!branches[partnerId]) branches[partnerId] = childBranch;
+      u.children.forEach((childId) => {
+        if (!branches[childId]) branches[childId] = childBranch;
+      });
+
+      if (!visited.has(partnerId)) queue.push(partnerId);
+      u.children.forEach((childId) => {
+        if (!visited.has(childId)) queue.push(childId);
+      });
+    });
+  }
+
+  return branches;
+}
+
+/** Count all descendants of a person */
+export function getDescendantCount(personId, visited = new Set()) {
+  if (visited.has(personId)) return 0;
+  visited.add(personId);
+  const children = getChildren(personId);
+  let count = children.length;
+  children.forEach((childId) => {
+    count += getDescendantCount(childId, visited);
+  });
+  return count;
+}
