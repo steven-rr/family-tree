@@ -123,13 +123,71 @@ function FamilyTree() {
     });
   }, []);
 
-  // Attach wheel listener with passive: false
+  // Touch handlers for mobile pan and pinch-zoom
+  const touchStart = useRef({ x: 0, y: 0, dist: 0, scale: 1 });
+
+  const handleTouchStart = useCallback(
+    (e) => {
+      if (e.target.closest(".tree-node") || e.target.closest(".collapse-toggle")) return;
+      if (e.touches.length === 1) {
+        setIsPanning(true);
+        panStart.current = {
+          x: e.touches[0].clientX - transform.x,
+          y: e.touches[0].clientY - transform.y,
+        };
+      } else if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        touchStart.current = {
+          dist: Math.sqrt(dx * dx + dy * dy),
+          scale: transform.scale,
+          x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+          y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+        };
+      }
+    },
+    [transform]
+  );
+
+  const handleTouchMove = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (e.touches.length === 1 && isPanning) {
+        setTransform((t) => ({
+          ...t,
+          x: e.touches[0].clientX - panStart.current.x,
+          y: e.touches[0].clientY - panStart.current.y,
+        }));
+      } else if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const ratio = dist / touchStart.current.dist;
+        const newScale = Math.min(Math.max(touchStart.current.scale * ratio, 0.15), 3);
+        setTransform((t) => ({
+          ...t,
+          scale: newScale,
+        }));
+      }
+    },
+    [isPanning]
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    setIsPanning(false);
+  }, []);
+
+  // Attach wheel and touch listeners with passive: false
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     el.addEventListener("wheel", handleWheel, { passive: false });
-    return () => el.removeEventListener("wheel", handleWheel);
-  }, [handleWheel]);
+    el.addEventListener("touchmove", handleTouchMove, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", handleWheel);
+      el.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, [handleWheel, handleTouchMove]);
 
   const handleNodeClick = (personId) => {
     navigate(`/person/${personId}`);
@@ -257,6 +315,8 @@ function FamilyTree() {
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Search Bar */}
       <div className={`search-bar ${searchOpen ? "open" : ""}`}>
