@@ -545,3 +545,78 @@
   opacity: 0.8;
   white-space: nowrap;
 }
+
+/* ============================
+   MOBILE RESPONSIVE
+   ============================ */
+@media (max-width: 768px) {
+  .tree-hint {
+    display: none;
+  }
+
+  .search-bar {
+    top: 10px;
+    right: 10px;
+  }
+
+  .search-input-wrapper {
+    width: 260px;
+  }
+
+  .tree-legend {
+    bottom: 12px;
+    left: 12px;
+    padding: 8px 12px;
+    font-size: 10px;
+    gap: 6px;
+    max-height: 40vh;
+    overflow-y: auto;
+  }
+
+  .legend-title {
+    font-size: 9px;
+  }
+
+  .zoom-controls {
+    bottom: 12px;
+    right: 12px;
+  }
+
+  .zoom-controls button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .zoom-controls button svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input-wrapper {
+    width: 220px;
+  }
+
+  .tree-legend {
+    bottom: 8px;
+    left: 8px;
+    padding: 6px 10px;
+    font-size: 9px;
+  }
+
+  .legend-section:nth-child(3) {
+    display: none;
+  }
+
+  .zoom-controls {
+    bottom: 8px;
+    right: 8px;
+    gap: 2px;
+  }
+
+  .zoom-controls button {
+    width: 32px;
+    height: 32px;
+  }
+}
