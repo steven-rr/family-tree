@@ -284,9 +284,6 @@ export function getSiblings(personId) {
     u.children.includes(personId)
   );
   const siblings = { full: [], half: [] };
-  const parentSets = parentUnionsList.map((u) =>
-    new Set([u.partner1, u.partner2])
-  );
 
   // Get all children from all parent unions
   const allParentIds = new Set();
