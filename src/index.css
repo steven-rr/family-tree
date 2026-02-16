@@ -1,27 +1,104 @@
-html
-{
-  display: block;
-  position: absolute;
-  left: 0;
-  overflow: visible;
-  width: 100%;  
-  height: 100%;
-  margin: 0 auto;
-  padding: 0;
-  
+/* === CSS Variables & Global Reset === */
+:root {
+  /* Colors */
+  --bg-primary: #0f1117;
+  --bg-secondary: #1a1d27;
+  --bg-card: #222536;
+  --bg-card-hover: #2a2e42;
+  --bg-overlay: rgba(15, 17, 23, 0.85);
 
-}
-body {
-  position: absolute;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  --text-primary: #e8eaf0;
+  --text-secondary: #9ba1b0;
+  --text-muted: #6b7185;
+
+  --accent-blue: #4a9eff;
+  --accent-blue-dim: #3578c5;
+  --accent-gold: #d4a853;
+  --accent-rose: #e8758a;
+  --accent-green: #5cbf8a;
+
+  --border-color: #2e3348;
+  --border-light: #3a3f56;
+
+  --male-color: #4a9eff;
+  --female-color: #e8758a;
+  --union-color: #d4a853;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow-blue: 0 0 20px rgba(74, 158, 255, 0.15);
+  --shadow-glow-rose: 0 0 20px rgba(232, 117, 138, 0.15);
+
+  /* Typography */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     sans-serif;
+
+  /* Spacing */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--accent-blue-dim);
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }
