@@ -1,9 +1,12 @@
 /**
  * Family Data Model
  *
- * Each person has an id, name, gender, and optional fields.
- * Relationships are stored separately from people to properly handle
- * complex connections (multiple marriages, half-siblings, etc.)
+ * Each person has an id, name, gender, and optional fields:
+ *   - middleName: middle name
+ *   - nickname: common nickname shown in parentheses
+ *   - birthYear / deathYear
+ *   - bio: short biography
+ *   - photo: URL or null
  *
  * Unions represent marriages/partnerships and link to children born from them.
  */
@@ -19,7 +22,7 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Patriarch of the Rivadeneira family. Had two marriages — first to Teotista Caceres (7 children), then to an Osorio woman (4 children).",
+    bio: "Patriarch of the Rivadeneira family. Had two marriages — first to Teotista Caceres (7 children), then to Mercedes Osorio (4 children).",
     photo: null,
   },
   "teotista-caceres": {
@@ -29,17 +32,17 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "First wife of Victor Rivadeneira. Together they had seven children: Cecilia, Mayo, Ovidio, Nino, Sulpi, Gonzalo, and Andrea.",
+    bio: "First wife of Victor Rivadeneira. Together they had seven children: Cecilia, Amaro (Mayo), Ovidio, Nino, Sulpi, Gonzalo, and Andrea.",
     photo: null,
   },
   "xxx-osorio": {
     id: "xxx-osorio",
-    firstName: "Unknown",
+    firstName: "Mercedes",
     lastName: "Osorio",
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Second wife of Victor Rivadeneira. Together they had four children: Ernestina, Casamira, Pedro, and Dolores.",
+    bio: "Second wife of Victor Rivadeneira. Together they had four children: Ernestina, Casimira, Pedro, and Dolores.",
     photo: null,
   },
 
@@ -58,12 +61,13 @@ export const people = {
   },
   "mayo-rivadeneira": {
     id: "mayo-rivadeneira",
-    firstName: "Mayo",
+    firstName: "Amaro",
+    nickname: "Mayo",
     lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Victor Rivadeneira and Teotista Caceres. Married once; his wife passed away young due to an aneurysm. Had three children: Marianella, Eliana, and Ricardo.",
+    bio: "Son of Victor Rivadeneira and Teotista Caceres. Known as Mayo. Married a woman (surname Samaniego) who passed away young due to an aneurysm. Had three children: Marianella, Eliana, and Ricardo.",
     photo: null,
   },
   "ovidio-rivadeneira": {
@@ -73,7 +77,7 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Victor Rivadeneira and Teotista Caceres. Paternal grandfather. Had two marriages — first wife (name unknown) bore Arturo and Myriam; second wife Felicia Rojas bore Jorge and Beto.",
+    bio: "Son of Victor Rivadeneira and Teotista Caceres. Paternal grandfather. Had two marriages — first wife (name unknown) bore Arturo and Myriam; second wife Felicia Rojas bore Jorge, Carlos Alberto (Beto), and Guillermo.",
     photo: null,
   },
   "nino-rivadeneira": {
@@ -83,7 +87,7 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Victor Rivadeneira and Teotista Caceres. Married Dora Monge. Had children: Mary, Jorge, and Victor.",
+    bio: "Son of Victor Rivadeneira and Teotista Caceres. Married Dora Monge. Had children: Mary (Cape), Jorge, Victor, and Ita.",
     photo: null,
   },
   "sulpi-rivadeneira": {
@@ -113,51 +117,51 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Victor Rivadeneira and Teotista Caceres. Had two children: Rosa and Emelina.",
+    bio: "Daughter of Victor Rivadeneira and Teotista Caceres. Had three children: Rosa, Emelina, and Pepe.",
     photo: null,
   },
 
   // ============================================================
-  // GENERATION 1 — VICTOR + OSORIO'S CHILDREN (4)
+  // GENERATION 1 — VICTOR + MERCEDES OSORIO'S CHILDREN (4)
   // ============================================================
   "ernestina-osorio": {
     id: "ernestina-osorio",
     firstName: "Ernestina",
-    lastName: "Osorio",
+    lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Victor Rivadeneira and Unknown Osorio. Had at least two children, but their names and her spouse are unknown.",
+    bio: "Daughter of Victor Rivadeneira and Mercedes Osorio. Had three children: Aurelio, Manuel, and Esperanza.",
     photo: null,
   },
   "casamira-osorio": {
     id: "casamira-osorio",
-    firstName: "Casamira",
-    lastName: "Osorio",
+    firstName: "Casimira",
+    lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Victor Rivadeneira and Unknown Osorio. Had children including Violeta and at least one other whose name is not remembered.",
+    bio: "Daughter of Victor Rivadeneira and Mercedes Osorio. Had children: Violeta, Santos, and Fidel. Spouse name unknown.",
     photo: null,
   },
   "pedro-osorio": {
     id: "pedro-osorio",
     firstName: "Pedro",
-    lastName: "Osorio",
+    lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Victor Rivadeneira and Unknown Osorio. Maternal grandfather. One of his spouses was Rosa Lizarraga, with whom he had five children: Pedro Rivadeneira, Enma Flores, Chela, Victor, and Nestor.",
+    bio: "Son of Victor Rivadeneira and Mercedes Osorio. Maternal grandfather. Had two marriages — first to Maria (children: Luisa, Balvina, Rosario, Ines, Walter, Raul), then to Rosa Lizarraga Nuñez (children: Pedro Antonio, Enma, Elizabeth (Chela), Victor, and Nestor).",
     photo: null,
   },
   "dolores-osorio": {
     id: "dolores-osorio",
     firstName: "Dolores",
-    lastName: "Osorio",
+    lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Victor Rivadeneira and Unknown Osorio. Had no biological children of her own, but raised Felicia.",
+    bio: "Daughter of Victor Rivadeneira and Mercedes Osorio. Had no biological children of her own, but raised Felicia.",
     photo: null,
   },
 
@@ -177,11 +181,11 @@ export const people = {
   "wife-mayo": {
     id: "wife-mayo",
     firstName: "Unknown",
-    lastName: "",
+    lastName: "Samaniego",
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Wife of Mayo Rivadeneira. Passed away young due to an aneurysm.",
+    bio: "Wife of Amaro (Mayo) Rivadeneira. Surname Samaniego; first name unknown. Passed away young due to an aneurysm.",
     photo: null,
   },
   "first-wife-ovidio": {
@@ -201,7 +205,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Second wife of Ovidio Rivadeneira. Paternal grandmother. Mother of Jorge Rivadeneira Sr. and Beto Rivadeneira.",
+    bio: "Second wife of Ovidio Rivadeneira. Paternal grandmother. Mother of Jorge Sr., Carlos Alberto (Beto), and Guillermo.",
     photo: null,
   },
   "dora-monge": {
@@ -211,7 +215,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Wife of Nino Rivadeneira. Mother of Mary, Jorge, and Victor.",
+    bio: "Wife of Nino Rivadeneira. Mother of Mary (Cape), Jorge, Victor, and Ita.",
     photo: null,
   },
   "unknown-andrea-spouse": {
@@ -231,17 +235,37 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Partner of Casamira Osorio. Name unknown.",
+    bio: "Partner of Casimira Rivadeneira. Name unknown.",
+    photo: null,
+  },
+  "maria-pedro-wife1": {
+    id: "maria-pedro-wife1",
+    firstName: "Maria",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "First wife of Pedro Rivadeneira (maternal grandfather). Mother of Luisa, Balvina, Rosario, Ines, Walter, and Raul.",
     photo: null,
   },
   "rosa-lizarraga": {
     id: "rosa-lizarraga",
     firstName: "Rosa",
-    lastName: "Lizarraga",
+    lastName: "Lizarraga Nuñez",
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Maternal grandmother. Wife of Pedro Osorio. Mother of Pedro Rivadeneira, Enma Flores, Chela, Victor, and Nestor.",
+    bio: "Maternal grandmother. Second wife of Pedro Rivadeneira. Mother of Pedro Antonio, Enma, Elizabeth (Chela), Victor, and Nestor.",
+    photo: null,
+  },
+  "unknown-ernestina-spouse": {
+    id: "unknown-ernestina-spouse",
+    firstName: "Unknown",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Partner of Ernestina Rivadeneira. Name unknown.",
     photo: null,
   },
 
@@ -270,7 +294,7 @@ export const people = {
   },
 
   // ============================================================
-  // GENERATION 2 — MAYO'S CHILDREN
+  // GENERATION 2 — AMARO (MAYO)'S CHILDREN
   // ============================================================
   "marianella": {
     id: "marianella",
@@ -279,7 +303,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Mayo Rivadeneira.",
+    bio: "Daughter of Amaro (Mayo) Rivadeneira.",
     photo: null,
   },
   "eliana": {
@@ -289,7 +313,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Mayo Rivadeneira.",
+    bio: "Daughter of Amaro (Mayo) Rivadeneira.",
     photo: null,
   },
   "ricardo": {
@@ -299,7 +323,7 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Mayo Rivadeneira.",
+    bio: "Son of Amaro (Mayo) Rivadeneira.",
     photo: null,
   },
 
@@ -314,7 +338,7 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Ovidio Rivadeneira and his first wife. Half-sibling to Jorge Sr. and Beto. Father of Cesar, Miguel, and Franklin.",
+    bio: "Son of Ovidio Rivadeneira and his first wife. Half-sibling to Jorge Sr., Carlos Alberto (Beto), and Guillermo. Married Flor. Father of Cesar, Miguel, and Franklin.",
     photo: null,
   },
   "myriam-rivadeneira": {
@@ -324,18 +348,30 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Ovidio Rivadeneira and his first wife. Half-sibling to Jorge Sr. and Beto. Mother of Veronica and Vanessa.",
+    bio: "Daughter of Ovidio Rivadeneira and his first wife. Half-sibling to Jorge Sr., Carlos Alberto (Beto), and Guillermo. Married Jose Cayao. Mother of Veronica and Vanessa.",
     photo: null,
   },
   // From Ovidio + Felicia Rojas
   "beto-rivadeneira": {
     id: "beto-rivadeneira",
-    firstName: "Beto",
+    firstName: "Carlos",
+    middleName: "Alberto",
+    nickname: "Beto",
     lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Ovidio Rivadeneira and Felicia Rojas. Brother of Jorge Rivadeneira Sr. Half-sibling to Arturo and Myriam. Had no children.",
+    bio: "Son of Ovidio Rivadeneira and Felicia Rojas. Known as Beto. Full brother of Jorge Sr. and Guillermo. Half-sibling to Arturo and Myriam. Had no children.",
+    photo: null,
+  },
+  "guillermo-rivadeneira": {
+    id: "guillermo-rivadeneira",
+    firstName: "Guillermo",
+    lastName: "Rivadeneira",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Ovidio Rivadeneira and Felicia Rojas. Full brother of Jorge Sr. and Carlos Alberto (Beto). Died young around age 10, in his brother Jorge's arms.",
     photo: null,
   },
 
@@ -345,17 +381,18 @@ export const people = {
   "mary-nino": {
     id: "mary-nino",
     firstName: "Mary",
-    lastName: "Rivadeneira",
+    nickname: "Cape",
+    lastName: "Rivadeneira Monge",
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Nino Rivadeneira and Dora Monge.",
+    bio: "Daughter of Nino Rivadeneira and Dora Monge. Known as Cape. Married Juan Flores. Mother of GianCarlo (Gianni) and Danny.",
     photo: null,
   },
   "jorge-nino": {
     id: "jorge-nino",
     firstName: "Jorge",
-    lastName: "Rivadeneira",
+    lastName: "Rivadeneira Monge",
     gender: "male",
     birthYear: null,
     deathYear: null,
@@ -365,11 +402,21 @@ export const people = {
   "victor-nino": {
     id: "victor-nino",
     firstName: "Victor",
-    lastName: "Rivadeneira",
+    lastName: "Rivadeneira Monge",
     gender: "male",
     birthYear: null,
     deathYear: null,
     bio: "Son of Nino Rivadeneira and Dora Monge.",
+    photo: null,
+  },
+  "ita-rivadeneira": {
+    id: "ita-rivadeneira",
+    firstName: "Ita",
+    lastName: "Rivadeneira Monge",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Nino Rivadeneira and Dora Monge. Sister of Mary (Cape), Jorge, and Victor.",
     photo: null,
   },
 
@@ -383,7 +430,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Andrea Rivadeneira.",
+    bio: "Daughter of Andrea Rivadeneira. Married Sebastian. Mother of Carmen and Alex.",
     photo: null,
   },
   "emelina": {
@@ -396,32 +443,163 @@ export const people = {
     bio: "Daughter of Andrea Rivadeneira.",
     photo: null,
   },
-
-  // ============================================================
-  // GENERATION 2 — CASAMIRA'S CHILDREN
-  // ============================================================
-  "violeta": {
-    id: "violeta",
-    firstName: "Violeta",
-    lastName: "Osorio",
-    gender: "female",
-    birthYear: null,
-    deathYear: null,
-    bio: "Daughter of Casamira Osorio. Granddaughter of Victor Rivadeneira and Unknown Osorio.",
-    photo: null,
-  },
-
-  // ============================================================
-  // GENERATION 2 — PEDRO OSORIO + ROSA LIZARRAGA'S CHILDREN (5)
-  // ============================================================
-  "pedro-rivadeneira": {
-    id: "pedro-rivadeneira",
-    firstName: "Pedro",
+  "pepe": {
+    id: "pepe",
+    firstName: "Pepe",
     lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Pedro Osorio and Rosa Lizarraga. Had two marriages — first to Lydia (children: Patricia, Pedro, Roberto), then a second wife (child: Rosa Rivadeneira).",
+    bio: "Son of Andrea Rivadeneira. Brother of Rosa and Emelina.",
+    photo: null,
+  },
+
+  // ============================================================
+  // GENERATION 2 — ERNESTINA'S CHILDREN
+  // ============================================================
+  "aurelio": {
+    id: "aurelio",
+    firstName: "Aurelio",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Ernestina Rivadeneira.",
+    photo: null,
+  },
+  "manuel-ernestina": {
+    id: "manuel-ernestina",
+    firstName: "Manuel",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Ernestina Rivadeneira.",
+    photo: null,
+  },
+  "esperanza": {
+    id: "esperanza",
+    firstName: "Esperanza",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Ernestina Rivadeneira.",
+    photo: null,
+  },
+
+  // ============================================================
+  // GENERATION 2 — CASIMIRA'S CHILDREN
+  // ============================================================
+  "violeta": {
+    id: "violeta",
+    firstName: "Violeta",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Casimira Rivadeneira.",
+    photo: null,
+  },
+  "santos": {
+    id: "santos",
+    firstName: "Santos",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Casimira Rivadeneira.",
+    photo: null,
+  },
+  "fidel": {
+    id: "fidel",
+    firstName: "Fidel",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Casimira Rivadeneira.",
+    photo: null,
+  },
+
+  // ============================================================
+  // GENERATION 2 — PEDRO (GRANDFATHER) + MARIA'S CHILDREN (6)
+  // ============================================================
+  "luisa-rivadeneira": {
+    id: "luisa-rivadeneira",
+    firstName: "Luisa",
+    lastName: "Rivadeneira",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Pedro Rivadeneira (grandfather) and his first wife Maria. Half-sibling to Pedro Antonio, Enma, Elizabeth (Chela), Victor, and Nestor.",
+    photo: null,
+  },
+  "balvina-rivadeneira": {
+    id: "balvina-rivadeneira",
+    firstName: "Balvina",
+    lastName: "Rivadeneira",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Pedro Rivadeneira (grandfather) and his first wife Maria.",
+    photo: null,
+  },
+  "rosario-rivadeneira": {
+    id: "rosario-rivadeneira",
+    firstName: "Rosario",
+    nickname: "Shayo",
+    lastName: "Rivadeneira",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Pedro Rivadeneira (grandfather) and his first wife Maria. Known as Shayo.",
+    photo: null,
+  },
+  "ines-rivadeneira": {
+    id: "ines-rivadeneira",
+    firstName: "Ines",
+    lastName: "Rivadeneira",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Pedro Rivadeneira (grandfather) and his first wife Maria.",
+    photo: null,
+  },
+  "walter-rivadeneira": {
+    id: "walter-rivadeneira",
+    firstName: "Walter",
+    lastName: "Rivadeneira",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Pedro Rivadeneira (grandfather) and his first wife Maria.",
+    photo: null,
+  },
+  "raul-rivadeneira": {
+    id: "raul-rivadeneira",
+    firstName: "Raul",
+    lastName: "Rivadeneira",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Pedro Rivadeneira (grandfather) and his first wife Maria.",
+    photo: null,
+  },
+
+  // ============================================================
+  // GENERATION 2 — PEDRO (GRANDFATHER) + ROSA LIZARRAGA'S CHILDREN (5)
+  // ============================================================
+  "pedro-rivadeneira": {
+    id: "pedro-rivadeneira",
+    firstName: "Pedro",
+    middleName: "Antonio",
+    nickname: "Pedroncho",
+    lastName: "Rivadeneira",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Pedro Rivadeneira (grandfather) and Rosa Lizarraga Nuñez. Known as Pedroncho. Had two marriages — first to Lydia Cardenas (children: Patricia, Pedro Carlomagno, Roberto Carlos), then to Vilma Benitez (child: Rosa).",
     photo: null,
   },
   "enma-flores": {
@@ -431,46 +609,47 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Mother. Daughter of Pedro Osorio and Rosa Lizarraga. Had two marriages. Sibling of Pedro Rivadeneira, Chela, Victor, and Nestor.",
+    bio: "Mother. Daughter of Pedro Rivadeneira (grandfather) and Rosa Lizarraga Nuñez. Had two marriages. Sibling of Pedro Antonio (Pedroncho), Elizabeth (Chela), Victor, and Nestor.",
     photo: null,
   },
   "chela-osorio": {
     id: "chela-osorio",
-    firstName: "Chela",
-    lastName: "Osorio",
+    firstName: "Elizabeth",
+    nickname: "Chela",
+    lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Pedro Osorio and Rosa Lizarraga. Married a man named Cespedes. Had three children: Milagros, John, and Jose.",
+    bio: "Daughter of Pedro Rivadeneira (grandfather) and Rosa Lizarraga Nuñez. Known as Chela. Married a man named Cespedes. Had three children: Milagros, John, and Jose (Joselo).",
     photo: null,
   },
   "victor-osorio": {
     id: "victor-osorio",
     firstName: "Victor",
-    lastName: "Osorio",
+    lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Pedro Osorio and Rosa Lizarraga. Sibling of Pedro Rivadeneira, Enma, Chela, and Nestor.",
+    bio: "Son of Pedro Rivadeneira (grandfather) and Rosa Lizarraga Nuñez. Sibling of Pedro Antonio, Enma, Elizabeth (Chela), and Nestor.",
     photo: null,
   },
   "nestor-osorio": {
     id: "nestor-osorio",
     firstName: "Nestor",
-    lastName: "Osorio",
+    lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Pedro Osorio and Rosa Lizarraga. Sibling of Pedro Rivadeneira, Enma, Chela, and Victor.",
+    bio: "Son of Pedro Rivadeneira (grandfather) and Rosa Lizarraga Nuñez. Sibling of Pedro Antonio, Enma, Elizabeth (Chela), and Victor.",
     photo: null,
   },
 
   // ============================================================
-  // GENERATION 2 — SPOUSES (OVIDIO'S KIDS, PEDRO R., CHELA, MYRIAM)
+  // GENERATION 2 — SPOUSES
   // ============================================================
   "unknown-arturo-spouse": {
     id: "unknown-arturo-spouse",
-    firstName: "Unknown",
+    firstName: "Flor",
     lastName: "",
     gender: "female",
     birthYear: null,
@@ -480,32 +659,32 @@ export const people = {
   },
   "unknown-myriam-spouse": {
     id: "unknown-myriam-spouse",
-    firstName: "Unknown",
-    lastName: "",
+    firstName: "Jose",
+    lastName: "Cayao",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Partner of Myriam Rivadeneira. Father of Veronica and Vanessa.",
+    bio: "Husband of Myriam Rivadeneira. Father of Veronica and Vanessa.",
     photo: null,
   },
   "lydia": {
     id: "lydia",
     firstName: "Lydia",
-    lastName: "",
+    lastName: "Cardenas",
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "First wife of Pedro Rivadeneira. Mother of Patricia, Pedro, and Roberto.",
+    bio: "First wife of Pedro Antonio (Pedroncho) Rivadeneira. Mother of Patricia, Pedro Carlomagno, and Roberto Carlos.",
     photo: null,
   },
   "second-wife-pedro-r": {
     id: "second-wife-pedro-r",
     firstName: "Vilma",
-    lastName: "",
+    lastName: "Benitez",
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Second wife of Pedro Rivadeneira. Mother of Rosa Rivadeneira. Last name unknown.",
+    bio: "Second wife of Pedro Antonio (Pedroncho) Rivadeneira. Mother of Rosa Rivadeneira.",
     photo: null,
   },
   "mr-cespedes": {
@@ -515,7 +694,27 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Husband of Chela. Father of Milagros, John, and Jose.",
+    bio: "Husband of Elizabeth (Chela). Father of Milagros, John, and Jose (Joselo).",
+    photo: null,
+  },
+  "sebastian": {
+    id: "sebastian",
+    firstName: "Sebastian",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Husband of Rosa (daughter of Andrea Rivadeneira). Father of Carmen and Alex.",
+    photo: null,
+  },
+  "juan-flores": {
+    id: "juan-flores",
+    firstName: "Juan",
+    lastName: "Flores",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Husband of Mary (Cape) Rivadeneira Monge. Father of GianCarlo (Gianni) and Danny.",
     photo: null,
   },
 
@@ -525,11 +724,12 @@ export const people = {
   "jorge-rivadeneira-sr": {
     id: "jorge-rivadeneira-sr",
     firstName: "Jorge",
+    nickname: "Lucho",
     lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Father. Son of Ovidio Rivadeneira and Felicia Rojas. Had two marriages. Half-sibling to Arturo and Myriam. Full sibling to Beto.",
+    bio: "Father. Known as Lucho. Son of Ovidio Rivadeneira and Felicia Rojas. Had two marriages. Full sibling to Carlos Alberto (Beto) and Guillermo. Half-sibling to Arturo and Myriam. Guillermo died young in his arms around age 10.",
     photo: null,
   },
   "aracely-diaz": {
@@ -539,7 +739,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "First wife of Jorge Rivadeneira Sr. Mother of Jorge Jr. and Ivette.",
+    bio: "First wife of Jorge (Lucho) Rivadeneira Sr. Mother of Jorge Jr. and Ivette.",
     photo: null,
   },
   "luis-flores": {
@@ -563,7 +763,7 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Arturo Rivadeneira.",
+    bio: "Son of Arturo Rivadeneira and Flor. Father of Jeremiah.",
     photo: null,
   },
   "miguel": {
@@ -573,7 +773,7 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Arturo Rivadeneira.",
+    bio: "Son of Arturo Rivadeneira and Flor. Father of Mia.",
     photo: null,
   },
   "franklin": {
@@ -583,7 +783,27 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Arturo Rivadeneira.",
+    bio: "Son of Arturo Rivadeneira and Flor. Has two children (names unknown).",
+    photo: null,
+  },
+  "unknown-cesar-spouse": {
+    id: "unknown-cesar-spouse",
+    firstName: "Unknown",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Partner of Cesar Rivadeneira. Mother of Jeremiah.",
+    photo: null,
+  },
+  "unknown-miguel-spouse": {
+    id: "unknown-miguel-spouse",
+    firstName: "Unknown",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Partner of Miguel Rivadeneira. Mother of Mia.",
     photo: null,
   },
 
@@ -597,7 +817,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Myriam Rivadeneira.",
+    bio: "Daughter of Myriam Rivadeneira and Jose Cayao. Has one child (name unknown).",
     photo: null,
   },
   "vanessa": {
@@ -607,14 +827,14 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Myriam Rivadeneira.",
+    bio: "Daughter of Myriam Rivadeneira and Jose Cayao.",
     photo: null,
   },
 
   // ============================================================
-  // GENERATION 3 — PEDRO RIVADENEIRA'S CHILDREN
+  // GENERATION 3 — PEDRO ANTONIO (PEDRONCHO) RIVADENEIRA'S CHILDREN
   // ============================================================
-  // From Pedro R. + Lydia
+  // From Pedro Antonio + Lydia Cardenas
   "patricia": {
     id: "patricia",
     firstName: "Patricia",
@@ -622,30 +842,32 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Pedro Rivadeneira and Lydia.",
+    bio: "Daughter of Pedro Antonio (Pedroncho) Rivadeneira and Lydia Cardenas.",
     photo: null,
   },
   "pedro-rivadeneira-jr": {
     id: "pedro-rivadeneira-jr",
     firstName: "Pedro",
+    middleName: "Carlomagno",
     lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Pedro Rivadeneira and Lydia.",
+    bio: "Son of Pedro Antonio (Pedroncho) Rivadeneira and Lydia Cardenas.",
     photo: null,
   },
   "roberto": {
     id: "roberto",
     firstName: "Roberto",
+    middleName: "Carlos",
     lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Pedro Rivadeneira and Lydia.",
+    bio: "Son of Pedro Antonio (Pedroncho) Rivadeneira and Lydia Cardenas.",
     photo: null,
   },
-  // From Pedro R. + 2nd wife
+  // From Pedro Antonio + Vilma Benitez
   "rosa-rivadeneira": {
     id: "rosa-rivadeneira",
     firstName: "Rosa",
@@ -653,7 +875,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Pedro Rivadeneira and his second wife.",
+    bio: "Daughter of Pedro Antonio (Pedroncho) Rivadeneira and Vilma Benitez.",
     photo: null,
   },
 
@@ -667,7 +889,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Chela and Mr. Cespedes.",
+    bio: "Daughter of Elizabeth (Chela) and Mr. Cespedes.",
     photo: null,
   },
   "john-cespedes": {
@@ -677,32 +899,34 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Chela and Mr. Cespedes.",
+    bio: "Son of Elizabeth (Chela) and Mr. Cespedes.",
     photo: null,
   },
   "jose-cespedes": {
     id: "jose-cespedes",
     firstName: "Jose",
-    lastName: "Cespedes",
+    nickname: "Joselo",
+    lastName: "Cespedes Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Chela and Mr. Cespedes.",
+    bio: "Son of Elizabeth (Chela) and Mr. Cespedes. Known as Joselo.",
     photo: null,
   },
 
   // ============================================================
   // GENERATION 3 — JORGE SR.'S CHILDREN
   // ============================================================
-  // From Jorge Sr. + First Wife
+  // From Jorge Sr. + Aracely Diaz
   "jorge-rivadeneira-jr": {
     id: "jorge-rivadeneira-jr",
     firstName: "Jorge",
+    middleName: "Kennet",
     lastName: "Rivadeneira",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Jorge Rivadeneira Sr. and Aracely Diaz. Half-sibling to Steven and Karina.",
+    bio: "Son of Jorge (Lucho) Rivadeneira Sr. and Aracely Diaz. Half-sibling to Steven and Karina.",
     photo: null,
   },
   "ivette-rivadeneira": {
@@ -712,7 +936,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Jorge Rivadeneira Sr. and Aracely Diaz. Half-sibling to Steven and Karina. Married Randy Uetz. Mother of Gabriel and Grace.",
+    bio: "Daughter of Jorge (Lucho) Rivadeneira Sr. and Aracely Diaz. Half-sibling to Steven and Karina. Married Randy Uetz. Mother of Gabriel and Grace.",
     photo: null,
   },
   "randy-uetz": {
@@ -723,6 +947,55 @@ export const people = {
     birthYear: null,
     deathYear: null,
     bio: "Husband of Ivette Rivadeneira. Father of Gabriel and Grace.",
+    photo: null,
+  },
+
+  // ============================================================
+  // GENERATION 3 — NINO'S GRANDCHILDREN (MARY + JUAN FLORES)
+  // ============================================================
+  "giancarlo-flores": {
+    id: "giancarlo-flores",
+    firstName: "GianCarlo",
+    nickname: "Gianni",
+    lastName: "Flores Rivadeneira",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Mary (Cape) Rivadeneira Monge and Juan Flores. Known as Gianni.",
+    photo: null,
+  },
+  "danny-flores": {
+    id: "danny-flores",
+    firstName: "Danny",
+    lastName: "Flores",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Mary (Cape) Rivadeneira Monge and Juan Flores.",
+    photo: null,
+  },
+
+  // ============================================================
+  // GENERATION 3 — ANDREA'S GRANDCHILDREN (ROSA + SEBASTIAN)
+  // ============================================================
+  "carmen": {
+    id: "carmen",
+    firstName: "Carmen",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Rosa (Andrea's daughter) and Sebastian.",
+    photo: null,
+  },
+  "alex": {
+    id: "alex",
+    firstName: "Alex",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Rosa (Andrea's daughter) and Sebastian.",
     photo: null,
   },
 
@@ -750,6 +1023,30 @@ export const people = {
     photo: null,
   },
 
+  // ============================================================
+  // GENERATION 4 — CESAR'S & MIGUEL'S CHILDREN
+  // ============================================================
+  "jeremiah": {
+    id: "jeremiah",
+    firstName: "Jeremiah",
+    lastName: "Rivadeneira",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Cesar Rivadeneira.",
+    photo: null,
+  },
+  "mia": {
+    id: "mia",
+    firstName: "Mia",
+    lastName: "Rivadeneira",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Miguel Rivadeneira.",
+    photo: null,
+  },
+
   // From Jorge Sr. + Enma
   "steven-rivadeneira": {
     id: "steven-rivadeneira",
@@ -758,17 +1055,18 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Jorge Rivadeneira Sr. and Enma Flores. Full sibling to Karina. Half-sibling to Jorge Jr. and Ivette.",
+    bio: "Son of Jorge (Lucho) Rivadeneira Sr. and Enma Flores. Full sibling to Karina. Half-sibling to Jorge Jr. and Ivette.",
     photo: null,
   },
   "karina-rivadeneira": {
     id: "karina-rivadeneira",
     firstName: "Karina",
+    middleName: "Victoria",
     lastName: "Rivadeneira",
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Jorge Rivadeneira Sr. and Enma Flores. Full sibling to Steven. Half-sibling to Jorge Jr. and Ivette.",
+    bio: "Daughter of Jorge (Lucho) Rivadeneira Sr. and Enma Flores. Full sibling to Steven. Half-sibling to Jorge Jr. and Ivette.",
     photo: null,
   },
 };
@@ -813,7 +1111,7 @@ export const unions = {
     children: ["dante", "isolina"],
   },
 
-  // === Mayo's family ===
+  // === Amaro (Mayo)'s family ===
   "union-mayo": {
     id: "union-mayo",
     partner1: "mayo-rivadeneira",
@@ -832,7 +1130,7 @@ export const unions = {
     id: "union-ovidio-felicia",
     partner1: "ovidio-rivadeneira",
     partner2: "felicia-rojas",
-    children: ["jorge-rivadeneira-sr", "beto-rivadeneira"],
+    children: ["jorge-rivadeneira-sr", "beto-rivadeneira", "guillermo-rivadeneira"],
   },
 
   // === Nino's family ===
@@ -840,7 +1138,7 @@ export const unions = {
     id: "union-nino-dora",
     partner1: "nino-rivadeneira",
     partner2: "dora-monge",
-    children: ["mary-nino", "jorge-nino", "victor-nino"],
+    children: ["mary-nino", "jorge-nino", "victor-nino", "ita-rivadeneira"],
   },
 
   // === Andrea's family ===
@@ -848,18 +1146,41 @@ export const unions = {
     id: "union-andrea",
     partner1: "andrea-rivadeneira",
     partner2: "unknown-andrea-spouse",
-    children: ["rosa-andrea", "emelina"],
+    children: ["rosa-andrea", "emelina", "pepe"],
   },
 
-  // === Casamira's family ===
+  // === Ernestina's family ===
+  "union-ernestina": {
+    id: "union-ernestina",
+    partner1: "ernestina-osorio",
+    partner2: "unknown-ernestina-spouse",
+    children: ["aurelio", "manuel-ernestina", "esperanza"],
+  },
+
+  // === Casimira's family ===
   "union-casamira": {
     id: "union-casamira",
     partner1: "casamira-osorio",
     partner2: "unknown-casamira-spouse",
-    children: ["violeta"],
+    children: ["violeta", "santos", "fidel"],
   },
 
-  // === Pedro Osorio + Rosa Lizarraga ===
+  // === Pedro (grandfather) + Maria (first wife) ===
+  "union-pedro-maria": {
+    id: "union-pedro-maria",
+    partner1: "pedro-osorio",
+    partner2: "maria-pedro-wife1",
+    children: [
+      "luisa-rivadeneira",
+      "balvina-rivadeneira",
+      "rosario-rivadeneira",
+      "ines-rivadeneira",
+      "walter-rivadeneira",
+      "raul-rivadeneira",
+    ],
+  },
+
+  // === Pedro (grandfather) + Rosa Lizarraga ===
   "union-pedro-rosa": {
     id: "union-pedro-rosa",
     partner1: "pedro-osorio",
@@ -889,7 +1210,7 @@ export const unions = {
     children: ["veronica", "vanessa"],
   },
 
-  // === Pedro Rivadeneira's families ===
+  // === Pedro Antonio (Pedroncho) Rivadeneira's families ===
   "union-pedro-r-lydia": {
     id: "union-pedro-r-lydia",
     partner1: "pedro-rivadeneira",
@@ -903,7 +1224,7 @@ export const unions = {
     children: ["rosa-rivadeneira"],
   },
 
-  // === Chela's family ===
+  // === Elizabeth (Chela)'s family ===
   "union-chela-cespedes": {
     id: "union-chela-cespedes",
     partner1: "chela-osorio",
@@ -924,6 +1245,7 @@ export const unions = {
     partner2: "enma-flores",
     children: ["steven-rivadeneira", "karina-rivadeneira"],
   },
+
   // === Ivette + Randy ===
   "union-ivette-randy": {
     id: "union-ivette-randy",
@@ -932,11 +1254,44 @@ export const unions = {
     children: ["gabriel-uetz", "grace-uetz"],
   },
 
+  // === Enma + Luis (no children) ===
   "union-enma-luis": {
     id: "union-enma-luis",
     partner1: "enma-flores",
     partner2: "luis-flores",
     children: [],
+  },
+
+  // === Mary (Cape) + Juan Flores ===
+  "union-mary-juan": {
+    id: "union-mary-juan",
+    partner1: "mary-nino",
+    partner2: "juan-flores",
+    children: ["giancarlo-flores", "danny-flores"],
+  },
+
+  // === Rosa (Andrea's daughter) + Sebastian ===
+  "union-rosa-andrea-sebastian": {
+    id: "union-rosa-andrea-sebastian",
+    partner1: "rosa-andrea",
+    partner2: "sebastian",
+    children: ["carmen", "alex"],
+  },
+
+  // === Cesar's family ===
+  "union-cesar": {
+    id: "union-cesar",
+    partner1: "cesar",
+    partner2: "unknown-cesar-spouse",
+    children: ["jeremiah"],
+  },
+
+  // === Miguel's family ===
+  "union-miguel": {
+    id: "union-miguel",
+    partner1: "miguel",
+    partner2: "unknown-miguel-spouse",
+    children: ["mia"],
   },
 };
 
@@ -947,11 +1302,33 @@ export function getPerson(id) {
   return people[id] || null;
 }
 
-/** Get full name */
+/** Get full name (includes middle name if present) */
 export function getFullName(personId) {
   const p = people[personId];
   if (!p) return "Unknown";
-  return `${p.firstName} ${p.lastName}`.trim();
+  let name = p.firstName;
+  if (p.middleName) name += ` ${p.middleName}`;
+  if (p.lastName) name += ` ${p.lastName}`;
+  return name.trim();
+}
+
+/** Get display name (first name with nickname in parentheses + last name) */
+export function getDisplayName(personId) {
+  const p = people[personId];
+  if (!p) return "Unknown";
+  let name = p.firstName;
+  if (p.nickname) name += ` "${p.nickname}"`;
+  if (p.lastName) name += ` ${p.lastName}`;
+  return name.trim();
+}
+
+/** Get short name (nickname or first name + last name) */
+export function getShortName(personId) {
+  const p = people[personId];
+  if (!p) return "Unknown";
+  const first = p.nickname || p.firstName;
+  if (p.lastName) return `${first} ${p.lastName}`;
+  return first;
 }
 
 /** Get all unions a person is part of */
@@ -999,14 +1376,12 @@ export function getSiblings(personId) {
   );
   const siblings = { full: [], half: [] };
 
-  // Get all children from all parent unions
   const allParentIds = new Set();
   parentUnionsList.forEach((u) => {
     allParentIds.add(u.partner1);
     allParentIds.add(u.partner2);
   });
 
-  // Find all unions involving any of these parents
   const relatedUnions = Object.values(unions).filter(
     (u) => allParentIds.has(u.partner1) || allParentIds.has(u.partner2)
   );
@@ -1014,7 +1389,6 @@ export function getSiblings(personId) {
   relatedUnions.forEach((u) => {
     u.children.forEach((childId) => {
       if (childId === personId) return;
-      // Check if this child shares both parents (full) or one parent (half)
       const childParentUnions = Object.values(unions).filter((cu) =>
         cu.children.includes(childId)
       );
