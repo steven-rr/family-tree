@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { computeLayout, NODE_WIDTH, NODE_HEIGHT } from "../data/treeLayout";
 import {
   getFullName,
+  getDisplayName,
   getChildren,
   getParents,
   getAllPeople,
@@ -55,7 +56,7 @@ function FamilyTree() {
     const q = searchQuery.toLowerCase();
     return getAllPeople()
       .filter((p) =>
-        `${p.firstName} ${p.lastName}`.toLowerCase().includes(q)
+        `${p.firstName} ${p.lastName} ${p.nickname || ""} ${p.middleName || ""}`.toLowerCase().includes(q)
       )
       .slice(0, 8);
   }, [searchQuery]);
@@ -359,7 +360,7 @@ function FamilyTree() {
                   >
                     <span className={`result-dot ${p.gender}`}></span>
                     <span className="result-name">
-                      {p.firstName} {p.lastName}
+                      {p.firstName}{p.nickname ? ` "${p.nickname}"` : ""} {p.lastName}
                     </span>
                     <span className={`result-branch branch-${branches[p.id] || "unknown"}`}>
                       {branches[p.id] === "teotista" ? "Teotista" :
@@ -514,7 +515,7 @@ function FamilyTree() {
             const isMale = node.person?.gender === "male";
             const isHovered = hoveredNode === node.id;
             const isHighlighted = highlightedId === node.id;
-            const fullName = getFullName(node.id);
+            const fullName = getDisplayName(node.id);
             const nameParts = fullName.split(" ");
             const branch = branches[node.id] || "unknown";
             const isCollapsed = collapsedIds.has(node.id);

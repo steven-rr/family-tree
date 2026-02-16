@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   getPerson,
   getFullName,
+  getDisplayName,
   getParents,
   getChildren,
   getPartners,
@@ -46,7 +47,7 @@ function PersonProfile() {
               <span className="avatar-icon">{isMale ? "👤" : "👩"}</span>
             )}
           </div>
-          <h1 className="profile-name">{getFullName(personId)}</h1>
+          <h1 className="profile-name">{getDisplayName(personId)}</h1>
           <div className="profile-meta">
             {person.birthYear && (
               <span className="meta-item">
