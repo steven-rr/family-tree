@@ -532,14 +532,14 @@ export const people = {
     bio: "Father. Son of Ovidio Rivadeneira and Felicia Rojas. Had two marriages. Half-sibling to Arturo and Myriam. Full sibling to Beto.",
     photo: null,
   },
-  "first-wife-jorge": {
-    id: "first-wife-jorge",
-    firstName: "First Wife",
-    lastName: "",
+  "aracely-diaz": {
+    id: "aracely-diaz",
+    firstName: "Aracely",
+    lastName: "Diaz",
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "First wife of Jorge Rivadeneira Sr.",
+    bio: "First wife of Jorge Rivadeneira Sr. Mother of Jorge Jr. and Ivette.",
     photo: null,
   },
   "luis-flores": {
@@ -702,7 +702,7 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Jorge Rivadeneira Sr. and his first wife. Half-sibling to Steven and Karina.",
+    bio: "Son of Jorge Rivadeneira Sr. and Aracely Diaz. Half-sibling to Steven and Karina.",
     photo: null,
   },
   "ivette-rivadeneira": {
@@ -712,7 +712,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Jorge Rivadeneira Sr. and his first wife. Half-sibling to Steven and Karina.",
+    bio: "Daughter of Jorge Rivadeneira Sr. and Aracely Diaz. Half-sibling to Steven and Karina.",
     photo: null,
   },
   // From Jorge Sr. + Enma
@@ -880,7 +880,7 @@ export const unions = {
   "union-jorge-first-wife": {
     id: "union-jorge-first-wife",
     partner1: "jorge-rivadeneira-sr",
-    partner2: "first-wife-jorge",
+    partner2: "aracely-diaz",
     children: ["jorge-rivadeneira-jr", "ivette-rivadeneira"],
   },
   "union-jorge-enma": {
