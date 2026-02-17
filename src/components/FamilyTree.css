@@ -735,6 +735,65 @@
 }
 
 /* ============================
+   BRANCH QUICK-JUMP BUTTONS
+   ============================ */
+.branch-jump-buttons {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 20;
+}
+
+.branch-jump-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.branch-jump-pill:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.branch-jump-teotista:hover {
+  border-color: #4a9eff;
+  box-shadow: 0 0 12px rgba(74, 158, 255, 0.2);
+}
+
+.branch-jump-osorio:hover {
+  border-color: #d4a853;
+  box-shadow: 0 0 12px rgba(212, 168, 83, 0.2);
+}
+
+.branch-jump-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.branch-jump-dot.teotista-dot {
+  background: #4a9eff;
+}
+
+.branch-jump-dot.osorio-dot {
+  background: #d4a853;
+}
+
+/* ============================
    MOBILE RESPONSIVE
    ============================ */
 @media (max-width: 768px) {
@@ -785,6 +844,17 @@
     padding: 6px 14px;
     bottom: 60px;
   }
+
+  .branch-jump-buttons {
+    top: 10px;
+    left: 10px;
+    gap: 6px;
+  }
+
+  .branch-jump-pill {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -812,5 +882,15 @@
   .zoom-controls button {
     width: 32px;
     height: 32px;
+  }
+
+  .branch-jump-buttons {
+    top: 8px;
+    left: 8px;
+  }
+
+  .branch-jump-pill {
+    padding: 4px 8px;
+    font-size: 10px;
   }
 }

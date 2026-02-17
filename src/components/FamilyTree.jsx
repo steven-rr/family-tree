@@ -9,6 +9,7 @@ import {
   getAllPeople,
   computeBranches,
   getDescendantCount,
+  unions as allUnions,
 } from "../data/familyData";
 import "./FamilyTree.css";
 
@@ -56,8 +57,18 @@ function FamilyTree() {
   const panStart = useRef({ x: 0, y: 0 });
   const [hoveredNode, setHoveredNode] = useState(null);
 
-  // Collapse state
-  const [collapsedIds, setCollapsedIds] = useState(new Set());
+  // Collapse state — start with gen-1 people collapsed so tree fits on screen
+  const [collapsedIds, setCollapsedIds] = useState(() => {
+    const gen1 = [
+      ...allUnions["union-victor-teotista"].children,
+      ...allUnions["union-victor-osorio"].children,
+    ];
+    const initial = new Set();
+    gen1.forEach((id) => {
+      if (getChildren(id).length > 0) initial.add(id);
+    });
+    return initial;
+  });
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
@@ -80,6 +91,8 @@ function FamilyTree() {
     () => computeLayout("victor-rivadeneira", collapsedIds),
     [collapsedIds]
   );
+  const layoutRef = useRef(layout);
+  layoutRef.current = layout;
 
   // Compute branch membership (static, doesn't change)
   const branches = useMemo(() => computeBranches(), []);
@@ -310,6 +323,67 @@ function FamilyTree() {
     }
   };
 
+  // Jump to a specific branch — expands it and pans/zooms to fit
+  const jumpToBranch = useCallback((branchName) => {
+    if (!containerRef.current) return;
+
+    const branchUnionId = branchName === "teotista"
+      ? "union-victor-teotista"
+      : "union-victor-osorio";
+    const branchRootChildren = allUnions[branchUnionId].children;
+
+    // Un-collapse gen-1 children of this branch
+    setCollapsedIds((prev) => {
+      const next = new Set(prev);
+      branchRootChildren.forEach((id) => next.delete(id));
+      return next;
+    });
+
+    // Wait for layout to recompute after state update
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const currentLayout = layoutRef.current;
+        const rect = containerRef.current.getBoundingClientRect();
+
+        // Collect all nodes in this branch + root + partner
+        const branchNodes = currentLayout.nodes.filter(
+          (n) => branches[n.id] === branchName || branches[n.id] === "both" || n.id === "victor-rivadeneira"
+        );
+
+        if (branchNodes.length === 0) return;
+
+        // Compute bounding box
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        branchNodes.forEach((n) => {
+          minX = Math.min(minX, n.x);
+          minY = Math.min(minY, n.y);
+          maxX = Math.max(maxX, n.x + NODE_WIDTH);
+          maxY = Math.max(maxY, n.y + NODE_HEIGHT);
+        });
+
+        const padding = 60;
+        minX -= padding;
+        minY -= padding;
+        maxX += padding;
+        maxY += padding;
+
+        const bbWidth = maxX - minX;
+        const bbHeight = maxY - minY;
+
+        const scale = Math.min(rect.width / bbWidth, rect.height / bbHeight, 1.2);
+        const clampedScale = Math.max(scale, 0.2);
+        const centerX = (minX + maxX) / 2;
+        const centerY = (minY + maxY) / 2;
+
+        setTransform({
+          scale: clampedScale,
+          x: rect.width / 2 - centerX * clampedScale,
+          y: rect.height / 2 - centerY * clampedScale,
+        });
+      });
+    });
+  }, [branches]);
+
   // Collapse toggle
   const toggleCollapse = (personId, e) => {
     e.stopPropagation();
@@ -527,6 +601,24 @@ function FamilyTree() {
             <path d="M7 14l5-5 5 5" />
             <path d="M7 19l5-5 5 5" />
           </svg>
+        </button>
+      </div>
+
+      {/* Branch Quick-Jump Buttons */}
+      <div className="branch-jump-buttons">
+        <button
+          className="branch-jump-pill branch-jump-teotista"
+          onClick={() => jumpToBranch("teotista")}
+        >
+          <span className="branch-jump-dot teotista-dot"></span>
+          Teotista
+        </button>
+        <button
+          className="branch-jump-pill branch-jump-osorio"
+          onClick={() => jumpToBranch("osorio")}
+        >
+          <span className="branch-jump-dot osorio-dot"></span>
+          Osorio
         </button>
       </div>
 
