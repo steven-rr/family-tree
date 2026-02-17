@@ -175,9 +175,20 @@ function FamilyTree() {
     setIsPanning(false);
   }, []);
 
-  // Zoom handler
+  // Zoom handler (also supports horizontal scroll for panning)
   const handleWheel = useCallback((e) => {
     e.preventDefault();
+
+    // Horizontal pan: shift+scroll or horizontal scroll wheel
+    if (e.shiftKey) {
+      setTransform((t) => ({ ...t, x: t.x - e.deltaY }));
+      return;
+    }
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 0) {
+      setTransform((t) => ({ ...t, x: t.x - e.deltaX }));
+      return;
+    }
+
     const delta = e.deltaY > 0 ? 0.92 : 1.08;
     setTransform((t) => {
       const newScale = Math.min(Math.max(t.scale * delta, 0.15), 3);
@@ -193,7 +204,7 @@ function FamilyTree() {
   }, []);
 
   // Touch handlers for mobile pan and pinch-zoom
-  const touchStart = useRef({ x: 0, y: 0, dist: 0, scale: 1 });
+  const touchStart = useRef({ dist: 0, scale: 1, mx: 0, my: 0, tx: 0, ty: 0 });
 
   const handleTouchStart = useCallback(
     (e) => {
@@ -205,13 +216,16 @@ function FamilyTree() {
           y: e.touches[0].clientY - transform.y,
         };
       } else if (e.touches.length === 2) {
+        setIsPanning(false);
         const dx = e.touches[0].clientX - e.touches[1].clientX;
         const dy = e.touches[0].clientY - e.touches[1].clientY;
         touchStart.current = {
           dist: Math.sqrt(dx * dx + dy * dy),
           scale: transform.scale,
-          x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
-          y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+          mx: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+          my: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+          tx: transform.x,
+          ty: transform.y,
         };
       }
     },
@@ -233,10 +247,19 @@ function FamilyTree() {
         const dist = Math.sqrt(dx * dx + dy * dy);
         const ratio = dist / touchStart.current.dist;
         const newScale = Math.min(Math.max(touchStart.current.scale * ratio, 0.15), 3);
-        setTransform((t) => ({
-          ...t,
+        const rect = containerRef.current.getBoundingClientRect();
+        // Current pinch midpoint
+        const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        // World point that was under the initial pinch midpoint
+        const wx = (touchStart.current.mx - rect.left - touchStart.current.tx) / touchStart.current.scale;
+        const wy = (touchStart.current.my - rect.top - touchStart.current.ty) / touchStart.current.scale;
+        // Place that world point under the current midpoint
+        setTransform({
           scale: newScale,
-        }));
+          x: (mx - rect.left) - wx * newScale,
+          y: (my - rect.top) - wy * newScale,
+        });
       }
     },
     [isPanning]
@@ -614,18 +637,18 @@ function FamilyTree() {
       {/* Branch Quick-Jump Buttons */}
       <div className="branch-jump-buttons">
         <button
-          className="branch-jump-pill branch-jump-teotista"
-          onClick={() => jumpToBranch("teotista")}
-        >
-          <span className="branch-jump-dot teotista-dot"></span>
-          Teotista
-        </button>
-        <button
           className="branch-jump-pill branch-jump-osorio"
           onClick={() => jumpToBranch("osorio")}
         >
           <span className="branch-jump-dot osorio-dot"></span>
           Osorio
+        </button>
+        <button
+          className="branch-jump-pill branch-jump-teotista"
+          onClick={() => jumpToBranch("teotista")}
+        >
+          <span className="branch-jump-dot teotista-dot"></span>
+          Teotista
         </button>
       </div>
 
@@ -662,7 +685,7 @@ function FamilyTree() {
 
       {/* Hint */}
       <div className="tree-hint">
-        Scroll to zoom &middot; Drag to pan &middot; Hover to trace ancestry &middot; Click to view profile &middot; Ctrl+F to search
+        Scroll to zoom &middot; Shift+Scroll to pan &middot; Drag to pan &middot; Hover to trace ancestry &middot; Click to view profile &middot; Ctrl+F to search
       </div>
 
       <svg
@@ -908,18 +931,18 @@ function FamilyTree() {
                 {/* Collapse/Expand toggle (only on primary nodes) */}
                 {nodeHasChildren && !isDup && (
                   <g
-                    className="collapse-toggle"
+                    className={`collapse-toggle ${isCollapsed ? "is-collapsed" : "is-expanded"}`}
                     onClick={(e) => toggleCollapse(realId, e)}
                   >
                     <circle
                       cx={NODE_WIDTH / 2}
-                      cy={NODE_HEIGHT + 12}
-                      r={9}
+                      cy={NODE_HEIGHT + 14}
+                      r={13}
                       className="collapse-circle"
                     />
                     <text
                       x={NODE_WIDTH / 2}
-                      y={NODE_HEIGHT + 16}
+                      y={NODE_HEIGHT + 19}
                       textAnchor="middle"
                       className="collapse-text"
                     >
