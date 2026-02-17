@@ -81,6 +81,18 @@ export function computeLayout(rootId = "victor-rivadeneira", collapsedIds = new 
 }
 
 /**
+ * Unions to skip when processing a specific person.
+ * Used for cross-branch marriages (e.g. cousins) where both partners
+ * should appear primarily on their own branch.
+ *
+ * Key: person ID, Value: union IDs to skip for that person.
+ * The union will be processed from the OTHER partner's side instead.
+ */
+const SKIP_UNIONS_FOR = {
+  "enma-flores": ["union-jorge-enma"],
+};
+
+/**
  * Build a hierarchical tree structure from the family data.
  *
  * When a person has already been visited (processed in another branch),
@@ -106,6 +118,11 @@ function buildFamilyTree(rootId, collapsedIds) {
     const familyUnions = [];
 
     personUnions.forEach((u) => {
+      // Skip unions that should be owned by the other partner
+      if (SKIP_UNIONS_FOR[personId] && SKIP_UNIONS_FOR[personId].includes(u.id)) {
+        return;
+      }
+
       const partnerId = u.partner1 === personId ? u.partner2 : u.partner1;
       const partnerAlreadyVisited = visited.has(partnerId);
       if (!partnerAlreadyVisited) {
@@ -137,7 +154,7 @@ function buildFamilyTree(rootId, collapsedIds) {
     };
   }
 
-  // For Victor, we want to control the order: Teotista branch first, Osorio second
+  // For Victor, we want to control the order: Osorio branch first (1st wife), Teotista second (2nd wife)
   visited.add(rootId);
   const rootUnions = getUnionsForPerson(rootId);
 
@@ -145,8 +162,8 @@ function buildFamilyTree(rootId, collapsedIds) {
   const osorioUnion = rootUnions.find((u) => u.id === "union-victor-osorio");
 
   const orderedUnions = [];
-  if (teotistaUnion) orderedUnions.push(teotistaUnion);
   if (osorioUnion) orderedUnions.push(osorioUnion);
+  if (teotistaUnion) orderedUnions.push(teotistaUnion);
   rootUnions.forEach((u) => {
     if (u !== teotistaUnion && u !== osorioUnion) orderedUnions.push(u);
   });

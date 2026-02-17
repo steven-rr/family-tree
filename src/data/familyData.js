@@ -22,7 +22,7 @@ export const people = {
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Patriarch of the Rivadeneira family. Had two marriages — first to Teotista Caceres (7 children), then to Mercedes Osorio (4 children).",
+    bio: "Patriarch of the Rivadeneira family. Had two marriages — first to Mercedes Osorio (4 children), then to Teotista Caceres (7 children).",
     photo: null,
   },
   "teotista-caceres": {
@@ -32,7 +32,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "First wife of Victor Rivadeneira. Together they had seven children: Cecilia, Amaro (Mayo), Ovidio, Nino, Sulpi, Gonzalo, and Andrea.",
+    bio: "Second wife of Victor Rivadeneira. Together they had seven children: Cecilia, Amaro (Mayo), Ovidio, Nino, Sulpi, Gonzalo, and Andrea.",
     photo: null,
   },
   "xxx-osorio": {
@@ -42,7 +42,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Second wife of Victor Rivadeneira. Together they had four children: Ernestina, Casimira, Pedro, and Dolores.",
+    bio: "First wife of Victor Rivadeneira. Together they had four children: Ernestina, Casimira, Pedro, and Dolores.",
     photo: null,
   },
 
