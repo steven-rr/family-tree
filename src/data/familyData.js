@@ -1516,6 +1516,27 @@ export function computeBranches() {
   return branches;
 }
 
+/** Get the generation number for a person (0 = patriarch Victor) */
+export function getGeneration(personId) {
+  const visited = new Set();
+  const queue = [{ id: "victor-rivadeneira", gen: 0 }];
+  while (queue.length > 0) {
+    const { id, gen } = queue.shift();
+    if (visited.has(id)) continue;
+    visited.add(id);
+    if (id === personId) return gen;
+    // Traverse to spouses (same generation)
+    getPartners(id).forEach((p) => {
+      if (!visited.has(p.partnerId)) queue.push({ id: p.partnerId, gen });
+    });
+    // Traverse to children (next generation)
+    getChildren(id).forEach((childId) => {
+      if (!visited.has(childId)) queue.push({ id: childId, gen: gen + 1 });
+    });
+  }
+  return null;
+}
+
 /** Count all descendants of a person */
 export function getDescendantCount(personId, visited = new Set()) {
   if (visited.has(personId)) return 0;
@@ -1526,4 +1547,91 @@ export function getDescendantCount(personId, visited = new Set()) {
     count += getDescendantCount(childId, visited);
   });
   return count;
+}
+
+/**
+ * Find the shortest relationship path between two people via BFS.
+ * Returns an array of edges: { from, to, type }
+ *   type: "child-of" (going up), "parent-of" (going down), "spouse"
+ * Returns null if no connection, or [] if same person.
+ */
+export function findRelationshipPath(personAId, personBId) {
+  if (personAId === personBId) return [];
+
+  // Build adjacency list
+  const adj = {};
+  const addEdge = (from, to, type) => {
+    if (!adj[from]) adj[from] = [];
+    adj[from].push({ to, type });
+  };
+
+  Object.values(unions).forEach((u) => {
+    addEdge(u.partner1, u.partner2, "spouse");
+    addEdge(u.partner2, u.partner1, "spouse");
+    u.children.forEach((childId) => {
+      addEdge(u.partner1, childId, "parent-of");
+      addEdge(u.partner2, childId, "parent-of");
+      addEdge(childId, u.partner1, "child-of");
+      addEdge(childId, u.partner2, "child-of");
+    });
+  });
+
+  // BFS for shortest path
+  const visited = new Set([personAId]);
+  const queue = [{ id: personAId, path: [] }];
+
+  while (queue.length > 0) {
+    const { id: current, path } = queue.shift();
+    const edges = adj[current] || [];
+
+    for (const edge of edges) {
+      if (visited.has(edge.to)) continue;
+      const newPath = [...path, { from: current, to: edge.to, type: edge.type }];
+      if (edge.to === personBId) return newPath;
+      visited.add(edge.to);
+      queue.push({ id: edge.to, path: newPath });
+    }
+  }
+
+  return null;
+}
+
+/** Get family-wide statistics */
+export function getFamilyStats() {
+  const allPeopleArr = Object.values(people);
+  const allUnionsArr = Object.values(unions);
+
+  let maxChildren = 0;
+  let maxChildrenUnionId = null;
+  allUnionsArr.forEach((u) => {
+    if (u.children.length > maxChildren) {
+      maxChildren = u.children.length;
+      maxChildrenUnionId = u.id;
+    }
+  });
+
+  // Count generations via BFS from root
+  let maxGen = 0;
+  const genVisited = new Set();
+  const genQueue = [{ id: "victor-rivadeneira", gen: 0 }];
+  while (genQueue.length > 0) {
+    const { id, gen } = genQueue.shift();
+    if (genVisited.has(id)) continue;
+    genVisited.add(id);
+    if (gen > maxGen) maxGen = gen;
+    getChildren(id).forEach((childId) => {
+      if (!genVisited.has(childId))
+        genQueue.push({ id: childId, gen: gen + 1 });
+    });
+  }
+
+  return {
+    totalMembers: allPeopleArr.length,
+    totalUnions: allUnionsArr.length,
+    generations: maxGen + 1,
+    maxChildrenCount: maxChildren,
+    maxChildrenUnionId,
+    maleCount: allPeopleArr.filter((p) => p.gender === "male").length,
+    femaleCount: allPeopleArr.filter((p) => p.gender === "female").length,
+  };
 }

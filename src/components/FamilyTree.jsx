@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { computeLayout, NODE_WIDTH, NODE_HEIGHT } from "../data/treeLayout";
 import {
   getFullName,
@@ -48,6 +48,7 @@ function getPathUnionIds(pathIds, allUnions) {
 
 function FamilyTree() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const svgRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -536,6 +537,20 @@ function FamilyTree() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  // Handle ?focus= parameter from "View on Tree" navigation
+  useEffect(() => {
+    const focusId = searchParams.get("focus");
+    if (focusId) {
+      expandToReveal(focusId);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setHighlightedId(focusId);
+        });
+      });
+      setSearchParams({}, { replace: true });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Expand / collapse all
   const collapseAll = () => {

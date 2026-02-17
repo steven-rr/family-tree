@@ -1,4 +1,5 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useMemo } from "react";
 import {
   getPerson,
   getFullName,
@@ -8,6 +9,9 @@ import {
   getPartners,
   getSiblings,
   getUnionsForPerson,
+  computeBranches,
+  getGeneration,
+  getDescendantCount,
 } from "../data/familyData";
 import "./PersonProfile.css";
 
@@ -33,6 +37,13 @@ function PersonProfile() {
   const children = getChildren(personId);
   const siblings = getSiblings(personId);
   const isMale = person.gender === "male";
+  const branches = useMemo(() => computeBranches(), []);
+  const branch = branches[personId] || "unknown";
+  const generation = useMemo(() => getGeneration(personId), [personId]);
+  const descendantCount = useMemo(() => getDescendantCount(personId), [personId]);
+
+  const genLabel = generation === 0 ? null : generation === 1 ? "1st Generation" : generation === 2 ? "2nd Generation" : generation === 3 ? "3rd Generation" : generation !== null ? `${generation}th Generation` : null;
+  const branchLabel = branch === "teotista" ? "Teotista Branch" : branch === "osorio" ? "Osorio Branch" : branch === "both" ? "Both Branches" : branch === "root" ? "Patriarch" : null;
 
   return (
     <div className="profile-page">
@@ -49,19 +60,64 @@ function PersonProfile() {
           </div>
           <h1 className="profile-name">{getDisplayName(personId)}</h1>
           <div className="profile-meta">
-            {person.birthYear && (
+            {person.birthYear && person.deathYear ? (
               <span className="meta-item">
-                Born {person.birthYear}
+                {person.birthYear} – {person.deathYear} (age {person.deathYear - person.birthYear})
               </span>
-            )}
-            {person.deathYear && (
-              <span className="meta-item">
-                Died {person.deathYear}
-              </span>
+            ) : (
+              <>
+                {person.birthYear && (
+                  <span className="meta-item">Born {person.birthYear}</span>
+                )}
+                {person.deathYear && (
+                  <span className="meta-item">Died {person.deathYear}</span>
+                )}
+              </>
             )}
             {!person.birthYear && !person.deathYear && (
               <span className="meta-item meta-muted">Dates unknown</span>
             )}
+          </div>
+          <div className="profile-badges">
+            {branchLabel && (
+              <span className={`profile-badge branch-badge-${branch}`}>
+                <span className={`badge-dot branch-dot-${branch}`}></span>
+                {branchLabel}
+              </span>
+            )}
+            {genLabel && branch !== "root" && (
+              <span className="profile-badge badge-gen">
+                {genLabel}
+              </span>
+            )}
+            {descendantCount > 0 && (
+              <span className="profile-badge badge-descendants">
+                {descendantCount} descendant{descendantCount !== 1 ? "s" : ""}
+              </span>
+            )}
+          </div>
+          <div className="profile-actions">
+            <button
+              className="profile-action-btn"
+              onClick={() => navigate(`/?focus=${personId}`)}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              View on Tree
+            </button>
+            <button
+              className="profile-action-btn accent"
+              onClick={() => navigate(`/related?person=${personId}`)}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              How Am I Related?
+            </button>
           </div>
         </div>
       </div>
@@ -116,7 +172,7 @@ function PersonProfile() {
               <div key={p.unionId} className="marriage-block">
                 {partners.length > 1 && (
                   <div className="marriage-label">
-                    {idx === 0 ? "1st" : idx === 1 ? "2nd" : `${idx + 1}th`} Marriage
+                    {idx === 0 ? "1st" : idx === 1 ? "2nd" : idx === 2 ? "3rd" : `${idx + 1}th`} Marriage
                   </div>
                 )}
                 <div className="person-cards">
