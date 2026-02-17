@@ -9,6 +9,7 @@ import {
   getAllPeople,
   computeBranches,
   getDescendantCount,
+  unions as allUnions,
 } from "../data/familyData";
 import "./FamilyTree.css";
 
@@ -56,8 +57,18 @@ function FamilyTree() {
   const panStart = useRef({ x: 0, y: 0 });
   const [hoveredNode, setHoveredNode] = useState(null);
 
-  // Collapse state
-  const [collapsedIds, setCollapsedIds] = useState(new Set());
+  // Collapse state — start with gen-1 people collapsed so tree fits on screen
+  const [collapsedIds, setCollapsedIds] = useState(() => {
+    const gen1 = [
+      ...allUnions["union-victor-teotista"].children,
+      ...allUnions["union-victor-osorio"].children,
+    ];
+    const initial = new Set();
+    gen1.forEach((id) => {
+      if (getChildren(id).length > 0) initial.add(id);
+    });
+    return initial;
+  });
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
@@ -80,15 +91,18 @@ function FamilyTree() {
     () => computeLayout("victor-rivadeneira", collapsedIds),
     [collapsedIds]
   );
+  const layoutRef = useRef(layout);
+  layoutRef.current = layout;
 
   // Compute branch membership (static, doesn't change)
   const branches = useMemo(() => computeBranches(), []);
 
-  // Pre-compute which nodes have children
+  // Pre-compute which nodes have children (keyed by originalId)
   const hasChildrenMap = useMemo(() => {
     const map = {};
     layout.nodes.forEach((n) => {
-      map[n.id] = getChildren(n.id).length > 0;
+      const rid = n.originalId || n.id;
+      map[rid] = getChildren(rid).length > 0;
     });
     return map;
   }, [layout]);
@@ -310,6 +324,70 @@ function FamilyTree() {
     }
   };
 
+  // Jump to a specific branch — expands it and pans/zooms to fit
+  const jumpToBranch = useCallback((branchName) => {
+    if (!containerRef.current) return;
+
+    const branchUnionId = branchName === "teotista"
+      ? "union-victor-teotista"
+      : "union-victor-osorio";
+    const branchRootChildren = allUnions[branchUnionId].children;
+
+    // Un-collapse gen-1 children of this branch
+    setCollapsedIds((prev) => {
+      const next = new Set(prev);
+      branchRootChildren.forEach((id) => next.delete(id));
+      return next;
+    });
+
+    // Wait for layout to recompute after state update
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const currentLayout = layoutRef.current;
+        const rect = containerRef.current.getBoundingClientRect();
+
+        // Collect all nodes in this branch + root + partner
+        const branchNodes = currentLayout.nodes.filter(
+          (n) => {
+            const rid = n.originalId || n.id;
+            return branches[rid] === branchName || branches[rid] === "both" || rid === "victor-rivadeneira";
+          }
+        );
+
+        if (branchNodes.length === 0) return;
+
+        // Compute bounding box
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        branchNodes.forEach((n) => {
+          minX = Math.min(minX, n.x);
+          minY = Math.min(minY, n.y);
+          maxX = Math.max(maxX, n.x + NODE_WIDTH);
+          maxY = Math.max(maxY, n.y + NODE_HEIGHT);
+        });
+
+        const padding = 60;
+        minX -= padding;
+        minY -= padding;
+        maxX += padding;
+        maxY += padding;
+
+        const bbWidth = maxX - minX;
+        const bbHeight = maxY - minY;
+
+        const scale = Math.min(rect.width / bbWidth, rect.height / bbHeight, 1.2);
+        const clampedScale = Math.max(scale, 0.2);
+        const centerX = (minX + maxX) / 2;
+        const centerY = (minY + maxY) / 2;
+
+        setTransform({
+          scale: clampedScale,
+          x: rect.width / 2 - centerX * clampedScale,
+          y: rect.height / 2 - centerY * clampedScale,
+        });
+      });
+    });
+  }, [branches]);
+
   // Collapse toggle
   const toggleCollapse = (personId, e) => {
     e.stopPropagation();
@@ -360,7 +438,9 @@ function FamilyTree() {
   // When highlighted person changes, center on them
   useEffect(() => {
     if (!highlightedId || !containerRef.current) return;
-    const node = layout.nodes.find((n) => n.id === highlightedId);
+    // Find the primary (non-duplicate) node, falling back to any match
+    const node = layout.nodes.find((n) => (n.originalId || n.id) === highlightedId && !n.isDuplicate)
+      || layout.nodes.find((n) => (n.originalId || n.id) === highlightedId);
     if (!node) return;
 
     const rect = containerRef.current.getBoundingClientRect();
@@ -395,7 +475,8 @@ function FamilyTree() {
   const collapseAll = () => {
     const ids = new Set();
     layout.nodes.forEach((n) => {
-      if (getChildren(n.id).length > 0) ids.add(n.id);
+      const rid = n.originalId || n.id;
+      if (getChildren(rid).length > 0) ids.add(rid);
     });
     setCollapsedIds(ids);
   };
@@ -530,6 +611,24 @@ function FamilyTree() {
         </button>
       </div>
 
+      {/* Branch Quick-Jump Buttons */}
+      <div className="branch-jump-buttons">
+        <button
+          className="branch-jump-pill branch-jump-teotista"
+          onClick={() => jumpToBranch("teotista")}
+        >
+          <span className="branch-jump-dot teotista-dot"></span>
+          Teotista
+        </button>
+        <button
+          className="branch-jump-pill branch-jump-osorio"
+          onClick={() => jumpToBranch("osorio")}
+        >
+          <span className="branch-jump-dot osorio-dot"></span>
+          Osorio
+        </button>
+      </div>
+
       {/* Legend */}
       <div className="tree-legend">
         <div className="legend-section">
@@ -625,7 +724,8 @@ function FamilyTree() {
                   // Check if any child endpoint is on the path
                   const connectedNodes = layout.nodes.filter((n) => {
                     const cx = n.x + NODE_WIDTH / 2;
-                    return (Math.abs(cx - c.x1) < 1 || Math.abs(cx - c.x2) < 1) && ancestryPath.has(n.id);
+                    const nRealId = n.originalId || n.id;
+                    return (Math.abs(cx - c.x1) < 1 || Math.abs(cx - c.x2) < 1) && ancestryPath.has(nRealId);
                   });
                   if (connectedNodes.length > 0 || c.x1 === c.x2) {
                     // Vertical lines from union or to a path member
@@ -674,25 +774,28 @@ function FamilyTree() {
 
           {/* Person nodes */}
           {layout.nodes.map((node) => {
+            // Use originalId for all data lookups (branches, ancestry, names, etc.)
+            const realId = node.originalId || node.id;
             const isMale = node.person?.gender === "male";
-            const isHovered = hoveredNode === node.id;
-            const isHighlighted = highlightedId === node.id;
-            const isOnPath = isPathActive && ancestryPath.has(node.id);
-            const isTarget = ancestryTarget === node.id;
+            const isHovered = hoveredNode === realId;
+            const isHighlighted = highlightedId === realId;
+            const isOnPath = isPathActive && ancestryPath.has(realId);
+            const isTarget = ancestryTarget === realId;
             const dimmed = isPathActive && !isOnPath;
-            const fullName = getDisplayName(node.id);
+            const fullName = getDisplayName(realId);
             const nameParts = fullName.split(" ");
-            const branch = branches[node.id] || "unknown";
-            const isCollapsed = collapsedIds.has(node.id);
-            const nodeHasChildren = hasChildrenMap[node.id];
+            const branch = branches[realId] || "unknown";
+            const isCollapsed = collapsedIds.has(realId);
+            const nodeHasChildren = hasChildrenMap[realId];
+            const isDup = node.isDuplicate;
 
             return (
               <g
                 key={node.id}
-                className={`tree-node ${isMale ? "male" : "female"} branch-${branch} ${isHovered ? "hovered" : ""} ${isHighlighted ? "highlighted" : ""} ${isOnPath ? "on-ancestry-path" : ""} ${isTarget ? "ancestry-target" : ""} ${dimmed ? "dimmed" : ""}`}
+                className={`tree-node ${isMale ? "male" : "female"} branch-${branch} ${isHovered ? "hovered" : ""} ${isHighlighted ? "highlighted" : ""} ${isOnPath ? "on-ancestry-path" : ""} ${isTarget ? "ancestry-target" : ""} ${dimmed ? "dimmed" : ""} ${isDup ? "duplicate" : ""}`}
                 transform={`translate(${node.x}, ${node.y})`}
-                onClick={() => handleNodeClick(node.id)}
-                onMouseEnter={() => handleNodeEnter(node.id)}
+                onClick={() => handleNodeClick(realId)}
+                onMouseEnter={() => handleNodeEnter(realId)}
                 onMouseLeave={handleNodeLeave}
               >
                 {/* Node background */}
@@ -705,6 +808,19 @@ function FamilyTree() {
                   ry={isMale ? 8 : 30}
                   className="node-bg"
                 />
+
+                {/* Duplicate indicator — subtle dashed border */}
+                {isDup && (
+                  <rect
+                    x={-2}
+                    y={-2}
+                    width={NODE_WIDTH + 4}
+                    height={NODE_HEIGHT + 4}
+                    rx={isMale ? 9 : 31}
+                    ry={isMale ? 9 : 31}
+                    className="duplicate-border"
+                  />
+                )}
 
                 {/* Ancestry path glow ring */}
                 {isOnPath && (
@@ -769,11 +885,31 @@ function FamilyTree() {
                   </text>
                 )}
 
-                {/* Collapse/Expand toggle */}
-                {nodeHasChildren && (
+                {/* Duplicate link badge */}
+                {isDup && (
+                  <g className="duplicate-badge">
+                    <circle
+                      cx={NODE_WIDTH - 2}
+                      cy={4}
+                      r={8}
+                      className="dup-badge-bg"
+                    />
+                    <text
+                      x={NODE_WIDTH - 2}
+                      y={7.5}
+                      textAnchor="middle"
+                      className="dup-badge-icon"
+                    >
+                      ↗
+                    </text>
+                  </g>
+                )}
+
+                {/* Collapse/Expand toggle (only on primary nodes) */}
+                {nodeHasChildren && !isDup && (
                   <g
                     className="collapse-toggle"
-                    onClick={(e) => toggleCollapse(node.id, e)}
+                    onClick={(e) => toggleCollapse(realId, e)}
                   >
                     <circle
                       cx={NODE_WIDTH / 2}
@@ -793,7 +929,7 @@ function FamilyTree() {
                 )}
 
                 {/* Collapsed badge showing descendant count */}
-                {isCollapsed && (
+                {isCollapsed && !isDup && (
                   <g className="collapsed-badge">
                     <rect
                       x={NODE_WIDTH - 8}
@@ -809,7 +945,7 @@ function FamilyTree() {
                       textAnchor="middle"
                       className="badge-text"
                     >
-                      {getDescendantCount(node.id)}
+                      {getDescendantCount(realId)}
                     </text>
                   </g>
                 )}

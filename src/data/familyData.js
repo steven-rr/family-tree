@@ -255,7 +255,27 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Maternal grandmother. Second wife of Pedro Rivadeneira. Mother of Pedro Antonio, Enma, Elizabeth (Chela), Victor, and Nestor.",
+    bio: "Maternal grandmother. Had a first marriage in the jungle, then married Pedro Rivadeneira. Mother of Emnida (from first marriage), and Pedro Antonio, Enma, Elizabeth (Chela), Victor, and Nestor (with Pedro).",
+    photo: null,
+  },
+  "unknown-rosa-first-husband": {
+    id: "unknown-rosa-first-husband",
+    firstName: "Unknown",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Rosa Lizarraga's first husband. Lived in the jungle, far from Lima.",
+    photo: null,
+  },
+  "emnida-rivadeneira": {
+    id: "emnida-rivadeneira",
+    firstName: "Emnida",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Rosa Lizarraga Nuñez from her first marriage.",
     photo: null,
   },
   "unknown-ernestina-spouse": {
@@ -1178,6 +1198,14 @@ export const unions = {
       "walter-rivadeneira",
       "raul-rivadeneira",
     ],
+  },
+
+  // === Rosa Lizarraga's first marriage (in the jungle) ===
+  "union-rosa-first": {
+    id: "union-rosa-first",
+    partner1: "unknown-rosa-first-husband",
+    partner2: "rosa-lizarraga",
+    children: ["emnida-rivadeneira"],
   },
 
   // === Pedro (grandfather) + Rosa Lizarraga ===
