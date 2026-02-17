@@ -57,18 +57,8 @@ function FamilyTree() {
   const panStart = useRef({ x: 0, y: 0 });
   const [hoveredNode, setHoveredNode] = useState(null);
 
-  // Collapse state — start with gen-1 people collapsed so tree fits on screen
-  const [collapsedIds, setCollapsedIds] = useState(() => {
-    const gen1 = [
-      ...allUnions["union-victor-teotista"].children,
-      ...allUnions["union-victor-osorio"].children,
-    ];
-    const initial = new Set();
-    gen1.forEach((id) => {
-      if (getChildren(id).length > 0) initial.add(id);
-    });
-    return initial;
-  });
+  // Collapse state — start fully expanded so users can find themselves
+  const [collapsedIds, setCollapsedIds] = useState(() => new Set());
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
@@ -175,33 +165,34 @@ function FamilyTree() {
     setIsPanning(false);
   }, []);
 
-  // Scroll handler: regular scroll = pan, Ctrl/Cmd+scroll = zoom
+  // Scroll = zoom (standard for canvas apps), shift+scroll = horizontal pan,
+  // trackpad horizontal swipe (deltaX) = horizontal pan
   const handleWheel = useCallback((e) => {
     e.preventDefault();
 
-    // Ctrl+scroll (or trackpad pinch) = zoom
-    if (e.ctrlKey || e.metaKey) {
-      const delta = e.deltaY > 0 ? 0.92 : 1.08;
-      setTransform((t) => {
-        const newScale = Math.min(Math.max(t.scale * delta, 0.15), 3);
-        const rect = containerRef.current.getBoundingClientRect();
-        const mx = e.clientX - rect.left;
-        const my = e.clientY - rect.top;
-        return {
-          scale: newScale,
-          x: mx - (mx - t.x) * (newScale / t.scale),
-          y: my - (my - t.y) * (newScale / t.scale),
-        };
-      });
+    // Trackpad horizontal scroll or shift+scroll → horizontal pan
+    if (e.shiftKey) {
+      setTransform((t) => ({ ...t, x: t.x - e.deltaY }));
+      return;
+    }
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 2) {
+      setTransform((t) => ({ ...t, x: t.x - e.deltaX }));
       return;
     }
 
-    // Regular scroll = pan (horizontal & vertical)
-    setTransform((t) => ({
-      ...t,
-      x: t.x - e.deltaX - (e.shiftKey ? e.deltaY : 0),
-      y: t.y - (e.shiftKey ? 0 : e.deltaY),
-    }));
+    // Scroll = zoom (centered on cursor)
+    const delta = e.deltaY > 0 ? 0.92 : 1.08;
+    setTransform((t) => {
+      const newScale = Math.min(Math.max(t.scale * delta, 0.15), 3);
+      const rect = containerRef.current.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      return {
+        scale: newScale,
+        x: mx - (mx - t.x) * (newScale / t.scale),
+        y: my - (my - t.y) * (newScale / t.scale),
+      };
+    });
   }, []);
 
   // Touch handlers for mobile pan and pinch-zoom
@@ -686,7 +677,7 @@ function FamilyTree() {
 
       {/* Hint */}
       <div className="tree-hint">
-        Scroll to pan &middot; Ctrl+Scroll to zoom &middot; Drag to pan &middot; Hover to trace ancestry &middot; Click to view profile &middot; Ctrl+F to search
+        Scroll to zoom &middot; Shift+Scroll to pan sideways &middot; Drag to pan &middot; Hover to trace ancestry &middot; Click to view profile &middot; Ctrl+F to search
       </div>
 
       <svg
