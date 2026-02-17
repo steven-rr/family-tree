@@ -27,6 +27,15 @@
   min-height: calc(100vh - 60px);
 }
 
+/* Transform group — CSS transitions for smooth programmatic navigation */
+.tree-transform-group {
+  transform-origin: 0 0;
+}
+
+.tree-transform-group.animating {
+  transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
 /* ============================
    SEARCH BAR
    ============================ */
@@ -783,6 +792,88 @@
   pointer-events: none;
   opacity: 0.8;
   white-space: nowrap;
+  animation: hint-fade 8s ease-out forwards;
+}
+
+@keyframes hint-fade {
+  0%, 62.5% { opacity: 0.8; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+/* ============================
+   GENERATION LABELS
+   ============================ */
+.generation-label {
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--text-muted);
+  font-family: var(--font-sans);
+  pointer-events: none;
+  opacity: 0.45;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.generation-tick {
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+  opacity: 0.25;
+}
+
+/* ============================
+   MINI-MAP
+   ============================ */
+.mini-map {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  z-index: 10;
+  background: rgba(15, 17, 23, 0.92);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+.mini-map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.mini-map-title {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mini-map-legend {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.mini-legend-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.mini-legend-text {
+  font-size: 8px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-right: 2px;
+}
+
+.mini-map-svg {
+  display: block;
+  cursor: crosshair;
 }
 
 /* ============================
@@ -861,18 +952,9 @@
     width: 260px;
   }
 
-  .tree-legend {
+  .mini-map {
     bottom: 12px;
     left: 12px;
-    padding: 8px 12px;
-    font-size: 10px;
-    gap: 6px;
-    max-height: 40vh;
-    overflow-y: auto;
-  }
-
-  .legend-title {
-    font-size: 9px;
   }
 
   .zoom-controls {
@@ -913,14 +995,7 @@
     width: 220px;
   }
 
-  .tree-legend {
-    bottom: 8px;
-    left: 8px;
-    padding: 6px 10px;
-    font-size: 9px;
-  }
-
-  .legend-section:nth-child(3) {
+  .mini-map {
     display: none;
   }
 

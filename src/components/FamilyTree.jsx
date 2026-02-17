@@ -70,10 +70,28 @@ function FamilyTree() {
   const [ancestryTarget, setAncestryTarget] = useState(null);
   const [tappedNode, setTappedNode] = useState(null);
 
+  // Container dimensions for mini-map viewport calculation
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [isAnimating, setIsAnimating] = useState(false);
+
   // Detect touch device
   const isTouchDevice = useRef(false);
   useEffect(() => {
     isTouchDevice.current = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+  }, []);
+
+  // Track container size for mini-map
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const update = () => {
+      if (containerRef.current) {
+        const r = containerRef.current.getBoundingClientRect();
+        setContainerSize({ width: r.width, height: r.height });
+      }
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
 
   // Compute layout with collapsed IDs
@@ -95,6 +113,30 @@ function FamilyTree() {
       map[rid] = getChildren(rid).length > 0;
     });
     return map;
+  }, [layout]);
+
+  // Compute generation levels for side labels
+  const generationLevels = useMemo(() => {
+    const labels = [
+      "Patriarch & Wives",
+      "Children",
+      "Grandchildren",
+      "Great-Grandchildren",
+      "Great-Great-Grandchildren",
+    ];
+    const ySet = new Set();
+    layout.nodes.forEach((n) => ySet.add(n.y));
+    return [...ySet]
+      .sort((a, b) => a - b)
+      .map((y, idx) => ({ y, label: labels[idx] || `Generation ${idx}` }));
+  }, [layout]);
+
+  const treeBounds = useMemo(() => {
+    let minX = Infinity;
+    layout.nodes.forEach((n) => {
+      if (n.x < minX) minX = n.x;
+    });
+    return { minX };
   }, [layout]);
 
   // Compute ancestry path for the active target
@@ -119,7 +161,7 @@ function FamilyTree() {
       .slice(0, 8);
   }, [searchQuery]);
 
-  // Center the tree on mount
+  // Center the tree on mount — fit the whole tree in view
   useEffect(() => {
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
@@ -128,10 +170,11 @@ function FamilyTree() {
         rect.height / layout.height,
         1
       );
+      const s = Math.max(scale, 0.15);
       setTransform({
-        x: (rect.width - layout.width * scale) / 2,
-        y: 20,
-        scale: Math.max(scale, 0.3),
+        x: (rect.width - layout.width * s) / 2,
+        y: (rect.height - layout.height * s) / 2,
+        scale: s,
       });
     }
   }, [layout]);
@@ -318,11 +361,18 @@ function FamilyTree() {
     }
   }, [tappedNode]);
 
+  // Animated transform for programmatic navigation (buttons, search, branch jump)
+  const animateTransform = useCallback((newTransformOrFn) => {
+    setIsAnimating(true);
+    setTransform(newTransformOrFn);
+    setTimeout(() => setIsAnimating(false), 400);
+  }, []);
+
   // Zoom controls
   const zoomIn = () =>
-    setTransform((t) => ({ ...t, scale: Math.min(t.scale * 1.25, 3) }));
+    animateTransform((t) => ({ ...t, scale: Math.min(t.scale * 1.25, 3) }));
   const zoomOut = () =>
-    setTransform((t) => ({ ...t, scale: Math.max(t.scale * 0.8, 0.15) }));
+    animateTransform((t) => ({ ...t, scale: Math.max(t.scale * 0.8, 0.15) }));
   const resetView = () => {
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
@@ -331,10 +381,11 @@ function FamilyTree() {
         rect.height / layout.height,
         1
       );
-      setTransform({
-        x: (rect.width - layout.width * scale) / 2,
-        y: 20,
-        scale: Math.max(scale, 0.3),
+      const s = Math.max(scale, 0.15);
+      animateTransform({
+        x: (rect.width - layout.width * s) / 2,
+        y: (rect.height - layout.height * s) / 2,
+        scale: s,
       });
     }
   };
@@ -394,7 +445,7 @@ function FamilyTree() {
         const centerX = (minX + maxX) / 2;
         const centerY = (minY + maxY) / 2;
 
-        setTransform({
+        animateTransform({
           scale: clampedScale,
           x: rect.width / 2 - centerX * clampedScale,
           y: rect.height / 2 - centerY * clampedScale,
@@ -459,7 +510,7 @@ function FamilyTree() {
     if (!node) return;
 
     const rect = containerRef.current.getBoundingClientRect();
-    setTransform({
+    animateTransform({
       scale: 1,
       x: rect.width / 2 - node.x - NODE_WIDTH / 2,
       y: rect.height / 2 - node.y - NODE_HEIGHT / 2,
@@ -496,6 +547,30 @@ function FamilyTree() {
     setCollapsedIds(ids);
   };
   const expandAll = () => setCollapsedIds(new Set());
+
+  // Mini-map
+  const miniMapWidth = 200;
+  const miniMapHeight = 130;
+  const miniMapScale = Math.min(
+    miniMapWidth / (layout.width || 1),
+    miniMapHeight / (layout.height || 1)
+  );
+
+  const handleMiniMapClick = useCallback(
+    (e) => {
+      if (!containerRef.current) return;
+      const svgRect = e.currentTarget.getBoundingClientRect();
+      const treeX = (e.clientX - svgRect.left) / miniMapScale;
+      const treeY = (e.clientY - svgRect.top) / miniMapScale;
+      const cr = containerRef.current.getBoundingClientRect();
+      animateTransform((t) => ({
+        ...t,
+        x: cr.width / 2 - treeX * t.scale,
+        y: cr.height / 2 - treeY * t.scale,
+      }));
+    },
+    [miniMapScale, animateTransform]
+  );
 
   const isPathActive = ancestryPath !== null;
 
@@ -644,35 +719,82 @@ function FamilyTree() {
         </button>
       </div>
 
-      {/* Legend */}
-      <div className="tree-legend">
-        <div className="legend-section">
-          <div className="legend-title">Gender</div>
-          <div className="legend-item">
-            <span className="legend-dot legend-male"></span> Male
-          </div>
-          <div className="legend-item">
-            <span className="legend-dot legend-female"></span> Female
-          </div>
-        </div>
-        <div className="legend-section">
-          <div className="legend-title">Branch</div>
-          <div className="legend-item">
-            <span className="legend-bar bar-teotista"></span> Teotista
-          </div>
-          <div className="legend-item">
-            <span className="legend-bar bar-osorio"></span> Osorio
-          </div>
-          <div className="legend-item">
-            <span className="legend-bar bar-both"></span> Both
+      {/* Mini-map */}
+      <div className="mini-map">
+        <div className="mini-map-header">
+          <span className="mini-map-title">Overview</span>
+          <div className="mini-map-legend">
+            <span className="mini-legend-dot" style={{ background: "#d4a853" }} title="Osorio branch"></span>
+            <span className="mini-legend-text">Osorio</span>
+            <span className="mini-legend-dot" style={{ background: "#4a9eff" }} title="Teotista branch"></span>
+            <span className="mini-legend-text">Teotista</span>
+            <span className="mini-legend-dot" style={{ background: "#b388ff" }} title="Both branches"></span>
+            <span className="mini-legend-text">Both</span>
           </div>
         </div>
-        <div className="legend-section">
-          <div className="legend-title">Interaction</div>
-          <div className="legend-item">
-            <span className="legend-line legend-hover-line"></span> Hover = ancestry
-          </div>
-        </div>
+        <svg
+          width={miniMapWidth}
+          height={miniMapHeight}
+          onClick={handleMiniMapClick}
+          className="mini-map-svg"
+        >
+          {layout.connectors.map((c, i) => (
+            <line
+              key={`mc-${i}`}
+              x1={c.x1 * miniMapScale}
+              y1={c.y1 * miniMapScale}
+              x2={c.x2 * miniMapScale}
+              y2={c.y2 * miniMapScale}
+              stroke={
+                c.branch === "teotista"
+                  ? "#4a9eff"
+                  : c.branch === "osorio"
+                    ? "#d4a853"
+                    : c.branch === "both"
+                      ? "#b388ff"
+                      : "#333"
+              }
+              strokeWidth={0.5}
+              opacity={0.25}
+            />
+          ))}
+          {layout.nodes.map((n) => {
+            const realId = n.originalId || n.id;
+            const branch = branches[realId] || "unknown";
+            const color =
+              branch === "teotista"
+                ? "#4a9eff"
+                : branch === "osorio"
+                  ? "#d4a853"
+                  : branch === "both"
+                    ? "#b388ff"
+                    : branch === "root"
+                      ? "#8899aa"
+                      : "#444";
+            return (
+              <circle
+                key={`mn-${n.id}`}
+                cx={(n.x + NODE_WIDTH / 2) * miniMapScale}
+                cy={(n.y + NODE_HEIGHT / 2) * miniMapScale}
+                r={2.5}
+                fill={color}
+                opacity={0.8}
+              />
+            );
+          })}
+          {containerSize.width > 0 && (
+            <rect
+              x={(-transform.x / transform.scale) * miniMapScale}
+              y={(-transform.y / transform.scale) * miniMapScale}
+              width={(containerSize.width / transform.scale) * miniMapScale}
+              height={(containerSize.height / transform.scale) * miniMapScale}
+              fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.6)"
+              strokeWidth={1.5}
+              rx={2}
+            />
+          )}
+        </svg>
       </div>
 
       {/* Hint */}
@@ -688,8 +810,33 @@ function FamilyTree() {
         style={{ cursor: isPanning ? "grabbing" : "grab" }}
       >
         <g
-          transform={`translate(${transform.x}, ${transform.y}) scale(${transform.scale})`}
+          className={`tree-transform-group${isAnimating ? " animating" : ""}`}
+          style={{
+            transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.scale})`,
+          }}
         >
+          {/* Generation labels */}
+          {generationLevels.map((gen) => (
+            <g key={`gen-${gen.y}`}>
+              <text
+                x={treeBounds.minX - 16}
+                y={gen.y + NODE_HEIGHT / 2 + 1}
+                textAnchor="end"
+                dominantBaseline="middle"
+                className="generation-label"
+              >
+                {gen.label}
+              </text>
+              <line
+                x1={treeBounds.minX - 8}
+                y1={gen.y + NODE_HEIGHT / 2}
+                x2={treeBounds.minX - 2}
+                y2={gen.y + NODE_HEIGHT / 2}
+                className="generation-tick"
+              />
+            </g>
+          ))}
+
           {/* Connector lines */}
           {layout.connectors.map((c, i) => {
             const isOnPath = isPathActive && pathUnionIds && c.unionId && pathUnionIds.has(c.unionId);
