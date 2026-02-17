@@ -175,32 +175,33 @@ function FamilyTree() {
     setIsPanning(false);
   }, []);
 
-  // Zoom handler (also supports horizontal scroll for panning)
+  // Scroll handler: regular scroll = pan, Ctrl/Cmd+scroll = zoom
   const handleWheel = useCallback((e) => {
     e.preventDefault();
 
-    // Horizontal pan: shift+scroll or horizontal scroll wheel
-    if (e.shiftKey) {
-      setTransform((t) => ({ ...t, x: t.x - e.deltaY }));
-      return;
-    }
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 0) {
-      setTransform((t) => ({ ...t, x: t.x - e.deltaX }));
+    // Ctrl+scroll (or trackpad pinch) = zoom
+    if (e.ctrlKey || e.metaKey) {
+      const delta = e.deltaY > 0 ? 0.92 : 1.08;
+      setTransform((t) => {
+        const newScale = Math.min(Math.max(t.scale * delta, 0.15), 3);
+        const rect = containerRef.current.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        return {
+          scale: newScale,
+          x: mx - (mx - t.x) * (newScale / t.scale),
+          y: my - (my - t.y) * (newScale / t.scale),
+        };
+      });
       return;
     }
 
-    const delta = e.deltaY > 0 ? 0.92 : 1.08;
-    setTransform((t) => {
-      const newScale = Math.min(Math.max(t.scale * delta, 0.15), 3);
-      const rect = containerRef.current.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
-      return {
-        scale: newScale,
-        x: mx - (mx - t.x) * (newScale / t.scale),
-        y: my - (my - t.y) * (newScale / t.scale),
-      };
-    });
+    // Regular scroll = pan (horizontal & vertical)
+    setTransform((t) => ({
+      ...t,
+      x: t.x - e.deltaX - (e.shiftKey ? e.deltaY : 0),
+      y: t.y - (e.shiftKey ? 0 : e.deltaY),
+    }));
   }, []);
 
   // Touch handlers for mobile pan and pinch-zoom
@@ -685,7 +686,7 @@ function FamilyTree() {
 
       {/* Hint */}
       <div className="tree-hint">
-        Scroll to zoom &middot; Shift+Scroll to pan &middot; Drag to pan &middot; Hover to trace ancestry &middot; Click to view profile &middot; Ctrl+F to search
+        Scroll to pan &middot; Ctrl+Scroll to zoom &middot; Drag to pan &middot; Hover to trace ancestry &middot; Click to view profile &middot; Ctrl+F to search
       </div>
 
       <svg
@@ -936,40 +937,28 @@ function FamilyTree() {
                   >
                     <circle
                       cx={NODE_WIDTH / 2}
-                      cy={NODE_HEIGHT + 14}
-                      r={13}
+                      cy={NODE_HEIGHT + 16}
+                      r={16}
                       className="collapse-circle"
                     />
                     <text
                       x={NODE_WIDTH / 2}
-                      y={NODE_HEIGHT + 19}
+                      y={NODE_HEIGHT + 22}
                       textAnchor="middle"
                       className="collapse-text"
                     >
                       {isCollapsed ? "+" : "−"}
                     </text>
-                  </g>
-                )}
-
-                {/* Collapsed badge showing descendant count */}
-                {isCollapsed && !isDup && (
-                  <g className="collapsed-badge">
-                    <rect
-                      x={NODE_WIDTH - 8}
-                      y={-4}
-                      width={28}
-                      height={18}
-                      rx={9}
-                      className="badge-bg"
-                    />
-                    <text
-                      x={NODE_WIDTH + 6}
-                      y={8}
-                      textAnchor="middle"
-                      className="badge-text"
-                    >
-                      {getDescendantCount(realId)}
-                    </text>
+                    {isCollapsed && (
+                      <text
+                        x={NODE_WIDTH / 2}
+                        y={NODE_HEIGHT + 38}
+                        textAnchor="middle"
+                        className="collapse-label"
+                      >
+                        {getDescendantCount(realId)}
+                      </text>
+                    )}
                   </g>
                 )}
 

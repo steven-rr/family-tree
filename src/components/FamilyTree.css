@@ -519,35 +519,50 @@
 }
 
 .collapse-circle {
-  fill: var(--bg-secondary);
+  fill: #1c2540;
   stroke: var(--accent-blue);
-  stroke-width: 2;
-  stroke-opacity: 0.6;
+  stroke-width: 2.5;
+  stroke-opacity: 0.7;
   transition: all 0.2s;
 }
 
 .collapse-toggle.is-collapsed .collapse-circle {
-  fill: rgba(74, 158, 255, 0.15);
-  stroke-opacity: 0.8;
+  fill: rgba(74, 158, 255, 0.2);
+  stroke-opacity: 1;
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 4px rgba(74, 158, 255, 0.3));
 }
 
 .collapse-toggle:hover .collapse-circle {
-  fill: rgba(74, 158, 255, 0.25);
-  stroke: var(--accent-blue);
+  fill: rgba(74, 158, 255, 0.35);
+  stroke: #6bb3ff;
   stroke-opacity: 1;
-  filter: drop-shadow(0 0 6px rgba(74, 158, 255, 0.4));
+  filter: drop-shadow(0 0 10px rgba(74, 158, 255, 0.5));
 }
 
 .collapse-text {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
   fill: var(--accent-blue);
   pointer-events: none;
   font-family: var(--font-sans);
 }
 
+.collapse-toggle.is-collapsed .collapse-text {
+  fill: #6bb3ff;
+}
+
 .collapse-toggle:hover .collapse-text {
   fill: #fff;
+}
+
+.collapse-label {
+  font-size: 10px;
+  font-weight: 600;
+  fill: var(--accent-blue);
+  opacity: 0.7;
+  pointer-events: none;
+  font-family: var(--font-sans);
 }
 
 /* Collapsed badge */

@@ -81,15 +81,13 @@ export function computeLayout(rootId = "victor-rivadeneira", collapsedIds = new 
 }
 
 /**
- * Unions to skip when processing a specific person.
- * Used for cross-branch marriages (e.g. cousins) where both partners
- * should appear primarily on their own branch.
- *
- * Key: person ID, Value: union IDs to skip for that person.
- * The union will be processed from the OTHER partner's side instead.
+ * Cross-branch unions where both partners should keep their primary
+ * position on their own branch. The "owner" partner gets the primary
+ * children; the other partner shows the union with duplicate stubs
+ * (partner + children) so the link is visible on both sides.
  */
-const SKIP_UNIONS_FOR = {
-  "enma-flores": ["union-jorge-enma"],
+const CROSS_BRANCH_UNIONS = {
+  "union-jorge-enma": "jorge-rivadeneira-sr",
 };
 
 /**
@@ -118,12 +116,32 @@ function buildFamilyTree(rootId, collapsedIds) {
     const familyUnions = [];
 
     personUnions.forEach((u) => {
-      // Skip unions that should be owned by the other partner
-      if (SKIP_UNIONS_FOR[personId] && SKIP_UNIONS_FOR[personId].includes(u.id)) {
+      const partnerId = u.partner1 === personId ? u.partner2 : u.partner1;
+
+      // Cross-branch union where another partner owns the children:
+      // show the union here with duplicate stubs only (don't visit anyone)
+      const crossOwner = CROSS_BRANCH_UNIONS[u.id];
+      if (crossOwner && crossOwner !== personId) {
+        const childNodes = [];
+        if (!collapsedIds.has(u.partner1) && !collapsedIds.has(u.partner2)) {
+          u.children.forEach((childId) => {
+            childNodes.push({
+              personId: childId,
+              gen: gen + 1,
+              unions: [],
+              isDuplicate: true,
+            });
+          });
+        }
+        familyUnions.push({
+          unionId: u.id,
+          partnerId,
+          partnerIsDuplicate: true,
+          children: childNodes,
+        });
         return;
       }
 
-      const partnerId = u.partner1 === personId ? u.partner2 : u.partner1;
       const partnerAlreadyVisited = visited.has(partnerId);
       if (!partnerAlreadyVisited) {
         visited.add(partnerId);
