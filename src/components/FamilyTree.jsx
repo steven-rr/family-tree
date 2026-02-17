@@ -57,18 +57,8 @@ function FamilyTree() {
   const panStart = useRef({ x: 0, y: 0 });
   const [hoveredNode, setHoveredNode] = useState(null);
 
-  // Collapse state — start with gen-1 people collapsed so tree fits on screen
-  const [collapsedIds, setCollapsedIds] = useState(() => {
-    const gen1 = [
-      ...allUnions["union-victor-teotista"].children,
-      ...allUnions["union-victor-osorio"].children,
-    ];
-    const initial = new Set();
-    gen1.forEach((id) => {
-      if (getChildren(id).length > 0) initial.add(id);
-    });
-    return initial;
-  });
+  // Collapse state — start fully expanded so users can find themselves
+  const [collapsedIds, setCollapsedIds] = useState(() => new Set());
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
@@ -175,20 +165,22 @@ function FamilyTree() {
     setIsPanning(false);
   }, []);
 
-  // Zoom handler (also supports horizontal scroll for panning)
+  // Scroll = zoom (standard for canvas apps), shift+scroll = horizontal pan,
+  // trackpad horizontal swipe (deltaX) = horizontal pan
   const handleWheel = useCallback((e) => {
     e.preventDefault();
 
-    // Horizontal pan: shift+scroll or horizontal scroll wheel
+    // Trackpad horizontal scroll or shift+scroll → horizontal pan
     if (e.shiftKey) {
       setTransform((t) => ({ ...t, x: t.x - e.deltaY }));
       return;
     }
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 0) {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 2) {
       setTransform((t) => ({ ...t, x: t.x - e.deltaX }));
       return;
     }
 
+    // Scroll = zoom (centered on cursor)
     const delta = e.deltaY > 0 ? 0.92 : 1.08;
     setTransform((t) => {
       const newScale = Math.min(Math.max(t.scale * delta, 0.15), 3);
@@ -685,7 +677,7 @@ function FamilyTree() {
 
       {/* Hint */}
       <div className="tree-hint">
-        Scroll to zoom &middot; Shift+Scroll to pan &middot; Drag to pan &middot; Hover to trace ancestry &middot; Click to view profile &middot; Ctrl+F to search
+        Scroll to zoom &middot; Shift+Scroll to pan sideways &middot; Drag to pan &middot; Hover to trace ancestry &middot; Click to view profile &middot; Ctrl+F to search
       </div>
 
       <svg
@@ -936,40 +928,28 @@ function FamilyTree() {
                   >
                     <circle
                       cx={NODE_WIDTH / 2}
-                      cy={NODE_HEIGHT + 14}
-                      r={13}
+                      cy={NODE_HEIGHT + 16}
+                      r={16}
                       className="collapse-circle"
                     />
                     <text
                       x={NODE_WIDTH / 2}
-                      y={NODE_HEIGHT + 19}
+                      y={NODE_HEIGHT + 22}
                       textAnchor="middle"
                       className="collapse-text"
                     >
                       {isCollapsed ? "+" : "−"}
                     </text>
-                  </g>
-                )}
-
-                {/* Collapsed badge showing descendant count */}
-                {isCollapsed && !isDup && (
-                  <g className="collapsed-badge">
-                    <rect
-                      x={NODE_WIDTH - 8}
-                      y={-4}
-                      width={28}
-                      height={18}
-                      rx={9}
-                      className="badge-bg"
-                    />
-                    <text
-                      x={NODE_WIDTH + 6}
-                      y={8}
-                      textAnchor="middle"
-                      className="badge-text"
-                    >
-                      {getDescendantCount(realId)}
-                    </text>
+                    {isCollapsed && (
+                      <text
+                        x={NODE_WIDTH / 2}
+                        y={NODE_HEIGHT + 38}
+                        textAnchor="middle"
+                        className="collapse-label"
+                      >
+                        {getDescendantCount(realId)}
+                      </text>
+                    )}
                   </g>
                 )}
 
