@@ -97,11 +97,12 @@ function FamilyTree() {
   // Compute branch membership (static, doesn't change)
   const branches = useMemo(() => computeBranches(), []);
 
-  // Pre-compute which nodes have children
+  // Pre-compute which nodes have children (keyed by originalId)
   const hasChildrenMap = useMemo(() => {
     const map = {};
     layout.nodes.forEach((n) => {
-      map[n.id] = getChildren(n.id).length > 0;
+      const rid = n.originalId || n.id;
+      map[rid] = getChildren(rid).length > 0;
     });
     return map;
   }, [layout]);
@@ -347,7 +348,10 @@ function FamilyTree() {
 
         // Collect all nodes in this branch + root + partner
         const branchNodes = currentLayout.nodes.filter(
-          (n) => branches[n.id] === branchName || branches[n.id] === "both" || n.id === "victor-rivadeneira"
+          (n) => {
+            const rid = n.originalId || n.id;
+            return branches[rid] === branchName || branches[rid] === "both" || rid === "victor-rivadeneira";
+          }
         );
 
         if (branchNodes.length === 0) return;
@@ -434,7 +438,9 @@ function FamilyTree() {
   // When highlighted person changes, center on them
   useEffect(() => {
     if (!highlightedId || !containerRef.current) return;
-    const node = layout.nodes.find((n) => n.id === highlightedId);
+    // Find the primary (non-duplicate) node, falling back to any match
+    const node = layout.nodes.find((n) => (n.originalId || n.id) === highlightedId && !n.isDuplicate)
+      || layout.nodes.find((n) => (n.originalId || n.id) === highlightedId);
     if (!node) return;
 
     const rect = containerRef.current.getBoundingClientRect();
@@ -469,7 +475,8 @@ function FamilyTree() {
   const collapseAll = () => {
     const ids = new Set();
     layout.nodes.forEach((n) => {
-      if (getChildren(n.id).length > 0) ids.add(n.id);
+      const rid = n.originalId || n.id;
+      if (getChildren(rid).length > 0) ids.add(rid);
     });
     setCollapsedIds(ids);
   };
@@ -717,7 +724,8 @@ function FamilyTree() {
                   // Check if any child endpoint is on the path
                   const connectedNodes = layout.nodes.filter((n) => {
                     const cx = n.x + NODE_WIDTH / 2;
-                    return (Math.abs(cx - c.x1) < 1 || Math.abs(cx - c.x2) < 1) && ancestryPath.has(n.id);
+                    const nRealId = n.originalId || n.id;
+                    return (Math.abs(cx - c.x1) < 1 || Math.abs(cx - c.x2) < 1) && ancestryPath.has(nRealId);
                   });
                   if (connectedNodes.length > 0 || c.x1 === c.x2) {
                     // Vertical lines from union or to a path member
@@ -766,25 +774,28 @@ function FamilyTree() {
 
           {/* Person nodes */}
           {layout.nodes.map((node) => {
+            // Use originalId for all data lookups (branches, ancestry, names, etc.)
+            const realId = node.originalId || node.id;
             const isMale = node.person?.gender === "male";
-            const isHovered = hoveredNode === node.id;
-            const isHighlighted = highlightedId === node.id;
-            const isOnPath = isPathActive && ancestryPath.has(node.id);
-            const isTarget = ancestryTarget === node.id;
+            const isHovered = hoveredNode === realId;
+            const isHighlighted = highlightedId === realId;
+            const isOnPath = isPathActive && ancestryPath.has(realId);
+            const isTarget = ancestryTarget === realId;
             const dimmed = isPathActive && !isOnPath;
-            const fullName = getDisplayName(node.id);
+            const fullName = getDisplayName(realId);
             const nameParts = fullName.split(" ");
-            const branch = branches[node.id] || "unknown";
-            const isCollapsed = collapsedIds.has(node.id);
-            const nodeHasChildren = hasChildrenMap[node.id];
+            const branch = branches[realId] || "unknown";
+            const isCollapsed = collapsedIds.has(realId);
+            const nodeHasChildren = hasChildrenMap[realId];
+            const isDup = node.isDuplicate;
 
             return (
               <g
                 key={node.id}
-                className={`tree-node ${isMale ? "male" : "female"} branch-${branch} ${isHovered ? "hovered" : ""} ${isHighlighted ? "highlighted" : ""} ${isOnPath ? "on-ancestry-path" : ""} ${isTarget ? "ancestry-target" : ""} ${dimmed ? "dimmed" : ""}`}
+                className={`tree-node ${isMale ? "male" : "female"} branch-${branch} ${isHovered ? "hovered" : ""} ${isHighlighted ? "highlighted" : ""} ${isOnPath ? "on-ancestry-path" : ""} ${isTarget ? "ancestry-target" : ""} ${dimmed ? "dimmed" : ""} ${isDup ? "duplicate" : ""}`}
                 transform={`translate(${node.x}, ${node.y})`}
-                onClick={() => handleNodeClick(node.id)}
-                onMouseEnter={() => handleNodeEnter(node.id)}
+                onClick={() => handleNodeClick(realId)}
+                onMouseEnter={() => handleNodeEnter(realId)}
                 onMouseLeave={handleNodeLeave}
               >
                 {/* Node background */}
@@ -797,6 +808,19 @@ function FamilyTree() {
                   ry={isMale ? 8 : 30}
                   className="node-bg"
                 />
+
+                {/* Duplicate indicator — subtle dashed border */}
+                {isDup && (
+                  <rect
+                    x={-2}
+                    y={-2}
+                    width={NODE_WIDTH + 4}
+                    height={NODE_HEIGHT + 4}
+                    rx={isMale ? 9 : 31}
+                    ry={isMale ? 9 : 31}
+                    className="duplicate-border"
+                  />
+                )}
 
                 {/* Ancestry path glow ring */}
                 {isOnPath && (
@@ -861,11 +885,31 @@ function FamilyTree() {
                   </text>
                 )}
 
-                {/* Collapse/Expand toggle */}
-                {nodeHasChildren && (
+                {/* Duplicate link badge */}
+                {isDup && (
+                  <g className="duplicate-badge">
+                    <circle
+                      cx={NODE_WIDTH - 2}
+                      cy={4}
+                      r={8}
+                      className="dup-badge-bg"
+                    />
+                    <text
+                      x={NODE_WIDTH - 2}
+                      y={7.5}
+                      textAnchor="middle"
+                      className="dup-badge-icon"
+                    >
+                      ↗
+                    </text>
+                  </g>
+                )}
+
+                {/* Collapse/Expand toggle (only on primary nodes) */}
+                {nodeHasChildren && !isDup && (
                   <g
                     className="collapse-toggle"
-                    onClick={(e) => toggleCollapse(node.id, e)}
+                    onClick={(e) => toggleCollapse(realId, e)}
                   >
                     <circle
                       cx={NODE_WIDTH / 2}
@@ -885,7 +929,7 @@ function FamilyTree() {
                 )}
 
                 {/* Collapsed badge showing descendant count */}
-                {isCollapsed && (
+                {isCollapsed && !isDup && (
                   <g className="collapsed-badge">
                     <rect
                       x={NODE_WIDTH - 8}
@@ -901,7 +945,7 @@ function FamilyTree() {
                       textAnchor="middle"
                       className="badge-text"
                     >
-                      {getDescendantCount(node.id)}
+                      {getDescendantCount(realId)}
                     </text>
                   </g>
                 )}

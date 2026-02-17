@@ -204,7 +204,6 @@
 .connector-partner {
   stroke: var(--union-color);
   stroke-width: 2.5;
-  stroke-dasharray: 6, 4;
   opacity: 0.7;
   transition: opacity 0.3s;
 }
@@ -425,6 +424,35 @@
   font-weight: 400;
   font-size: 9px;
   fill: var(--text-secondary);
+}
+
+/* ============================
+   DUPLICATE NODE INDICATORS
+   ============================ */
+.duplicate-border {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 1;
+  stroke-dasharray: 4, 3;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.tree-node.duplicate .node-bg {
+  opacity: 0.85;
+}
+
+.dup-badge-bg {
+  fill: var(--bg-secondary);
+  stroke: var(--border-light);
+  stroke-width: 1;
+}
+
+.dup-badge-icon {
+  font-size: 9px;
+  fill: var(--text-muted);
+  pointer-events: none;
+  font-family: var(--font-sans);
 }
 
 /* ============================

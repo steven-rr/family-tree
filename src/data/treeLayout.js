@@ -1,14 +1,20 @@
 /**
- * Tree Layout Engine — Parent-Aligned
+ * Tree Layout Engine — Parent-Aligned with Duplicate Nodes
  *
  * Positions children directly beneath their parent couple so lineage
  * is visually obvious. Victor's two branches (Teotista left, Osorio right)
  * are separated with a gap.
  *
+ * People with multiple marriages appear as duplicate nodes — one copy
+ * next to each spouse — so every family unit looks natural and complete.
+ * Duplicates carry a visual flag for the renderer.
+ *
  * Algorithm:
  *   1. Build a tree of "family units" (union + children subtrees)
+ *      — Allow duplicate stubs for people already placed elsewhere
  *   2. Recursively compute subtree widths bottom-up
  *   3. Position each family unit so children are centered beneath parents
+ *      — Duplicates get unique position keys (personId__dup_N)
  *   4. Build connector lines from union dots down to children
  */
 
@@ -19,14 +25,14 @@ const NODE_HEIGHT = 60;
 const H_GAP = 40;
 const V_GAP = 100;
 const COUPLE_GAP = 30;
-const BRANCH_GAP = 80; // extra gap between Teotista and Osorio branches
+const BRANCH_GAP = 80;
 
 /**
  * Build the full layout starting from root.
  * Returns { nodes, unions, connectors, width, height }
  */
 export function computeLayout(rootId = "victor-rivadeneira", collapsedIds = new Set()) {
-  // Step 1: Build the family tree structure
+  // Step 1: Build the family tree structure (with duplicate stubs)
   const tree = buildFamilyTree(rootId, collapsedIds);
 
   // Step 2: Compute subtree widths bottom-up
@@ -35,7 +41,8 @@ export function computeLayout(rootId = "victor-rivadeneira", collapsedIds = new 
   // Step 3: Position everything
   const positions = {};
   const unionPositions = {};
-  positionTree(tree, 40, 40, positions, unionPositions);
+  const dupCounts = {};
+  positionTree(tree, 40, 40, positions, unionPositions, dupCounts);
 
   // Compute total dimensions
   let maxX = 0;
@@ -48,12 +55,20 @@ export function computeLayout(rootId = "victor-rivadeneira", collapsedIds = new 
   // Step 4: Build connectors
   const connectors = buildConnectors(tree, positions, unionPositions);
 
-  return {
-    nodes: Object.entries(positions).map(([id, pos]) => ({
-      id,
+  // Build output nodes from ALL positions (including duplicates)
+  const nodes = Object.entries(positions).map(([posId, pos]) => {
+    const originalId = pos.originalId || posId;
+    return {
+      id: posId,
+      originalId,
       ...pos,
-      person: people[id],
-    })),
+      person: people[originalId],
+      isDuplicate: pos.isDuplicate || false,
+    };
+  });
+
+  return {
+    nodes,
     unions: Object.entries(unionPositions).map(([id, pos]) => ({
       id,
       ...pos,
@@ -68,18 +83,23 @@ export function computeLayout(rootId = "victor-rivadeneira", collapsedIds = new 
 /**
  * Build a hierarchical tree structure from the family data.
  *
- * Each node represents a "family unit": a person (or couple) and their
- * children subtrees grouped by union.
- *
- * For the root (Victor), we split into two branches:
- *   - Teotista branch (left)
- *   - Osorio branch (right)
+ * When a person has already been visited (processed in another branch),
+ * a "duplicate stub" is created so they still appear as a child of
+ * their other parent. The stub doesn't expand further.
  */
 function buildFamilyTree(rootId, collapsedIds) {
   const visited = new Set();
 
   function buildPersonNode(personId, gen) {
-    if (visited.has(personId)) return null;
+    if (visited.has(personId)) {
+      // Already processed elsewhere — create a duplicate stub
+      return {
+        personId,
+        gen,
+        unions: [],
+        isDuplicate: true,
+      };
+    }
     visited.add(personId);
 
     const personUnions = getUnionsForPerson(personId);
@@ -87,7 +107,8 @@ function buildFamilyTree(rootId, collapsedIds) {
 
     personUnions.forEach((u) => {
       const partnerId = u.partner1 === personId ? u.partner2 : u.partner1;
-      if (!visited.has(partnerId)) {
+      const partnerAlreadyVisited = visited.has(partnerId);
+      if (!partnerAlreadyVisited) {
         visited.add(partnerId);
       }
 
@@ -95,16 +116,16 @@ function buildFamilyTree(rootId, collapsedIds) {
       const childNodes = [];
       if (!collapsedIds.has(u.partner1) && !collapsedIds.has(u.partner2)) {
         u.children.forEach((childId) => {
-          if (!visited.has(childId)) {
-            const childNode = buildPersonNode(childId, gen + 1);
-            if (childNode) childNodes.push(childNode);
-          }
+          // Always try to build — buildPersonNode returns duplicate stubs for visited people
+          const childNode = buildPersonNode(childId, gen + 1);
+          if (childNode) childNodes.push(childNode);
         });
       }
 
       familyUnions.push({
         unionId: u.id,
         partnerId,
+        partnerIsDuplicate: partnerAlreadyVisited,
         children: childNodes,
       });
     });
@@ -120,15 +141,12 @@ function buildFamilyTree(rootId, collapsedIds) {
   visited.add(rootId);
   const rootUnions = getUnionsForPerson(rootId);
 
-  // Find the two main unions
   const teotistaUnion = rootUnions.find((u) => u.id === "union-victor-teotista");
   const osorioUnion = rootUnions.find((u) => u.id === "union-victor-osorio");
 
-  // Order: Teotista first (left), Osorio second (right)
   const orderedUnions = [];
   if (teotistaUnion) orderedUnions.push(teotistaUnion);
   if (osorioUnion) orderedUnions.push(osorioUnion);
-  // Any other unions
   rootUnions.forEach((u) => {
     if (u !== teotistaUnion && u !== osorioUnion) orderedUnions.push(u);
   });
@@ -141,16 +159,15 @@ function buildFamilyTree(rootId, collapsedIds) {
     const childNodes = [];
     if (!collapsedIds.has(u.partner1) && !collapsedIds.has(u.partner2)) {
       u.children.forEach((childId) => {
-        if (!visited.has(childId)) {
-          const childNode = buildPersonNode(childId, 1);
-          if (childNode) childNodes.push(childNode);
-        }
+        const childNode = buildPersonNode(childId, 1);
+        if (childNode) childNodes.push(childNode);
       });
     }
 
     familyUnions.push({
       unionId: u.id,
       partnerId,
+      partnerIsDuplicate: false,
       children: childNodes,
       isBranchRoot: u === teotistaUnion || u === osorioUnion,
       branchName: u === teotistaUnion ? "teotista" : u === osorioUnion ? "osorio" : null,
@@ -166,30 +183,21 @@ function buildFamilyTree(rootId, collapsedIds) {
 
 /**
  * Compute the width each subtree needs (bottom-up).
- *
- * A person with no unions: just NODE_WIDTH.
- * A person with unions: sum of all their family unit widths.
- *
- * A family unit width = max(couple width, children row width).
- * Children row width = sum of children subtree widths + gaps.
+ * Duplicate stubs are just NODE_WIDTH (no further expansion).
  */
 function computeSubtreeWidths(node) {
   if (!node) return 0;
 
-  if (node.unions.length === 0) {
-    // Leaf person (no marriages/children in tree)
+  if (node.isDuplicate || node.unions.length === 0) {
     node.subtreeWidth = NODE_WIDTH;
     return node.subtreeWidth;
   }
 
-  // Calculate the width needed for each union's children
   let totalWidth = 0;
 
   node.unions.forEach((u, uIdx) => {
-    // Partner takes NODE_WIDTH, with COUPLE_GAP between person and partner
     const coupleWidth = NODE_WIDTH + COUPLE_GAP + NODE_WIDTH;
 
-    // Children row width
     let childrenWidth = 0;
     u.children.forEach((child, cIdx) => {
       computeSubtreeWidths(child);
@@ -201,9 +209,7 @@ function computeSubtreeWidths(node) {
     u.childrenWidth = childrenWidth;
     u.unitWidth = Math.max(coupleWidth, childrenWidth);
 
-    // Check if this is a branch boundary for extra gap
     const branchGap = (u.isBranchRoot && uIdx > 0) ? BRANCH_GAP : 0;
-
     if (uIdx > 0) totalWidth += H_GAP + branchGap;
     totalWidth += u.unitWidth;
   });
@@ -213,31 +219,46 @@ function computeSubtreeWidths(node) {
 }
 
 /**
- * Position the tree nodes recursively.
- *
- * Each person is positioned, then for each of their unions:
- *   - The partner is placed next to them
- *   - Children are centered beneath the couple
+ * Get a unique position key for a person.
+ * First occurrence uses the person ID directly.
+ * Subsequent occurrences get __dup_N suffixed keys.
  */
-function positionTree(node, x, y, positions, unionPositions) {
+function getPosKey(personId, positions, dupCounts) {
+  if (!positions[personId]) return personId;
+  if (!dupCounts[personId]) dupCounts[personId] = 0;
+  dupCounts[personId]++;
+  return `${personId}__dup_${dupCounts[personId]}`;
+}
+
+/**
+ * Position the tree nodes recursively.
+ * Each person in each union gets their own position.
+ * Duplicates get unique position keys.
+ */
+function positionTree(node, x, y, positions, unionPositions, dupCounts) {
   if (!node) return;
 
-  const gen = node.gen;
   const nodeY = y;
 
-  if (node.unions.length === 0) {
-    // Simple leaf node — just place the person
-    positions[node.personId] = {
+  // Duplicate stubs or leaf nodes — just place
+  if (node.isDuplicate || node.unions.length === 0) {
+    const posKey = getPosKey(node.personId, positions, dupCounts);
+    positions[posKey] = {
       x,
       y: nodeY,
       width: NODE_WIDTH,
       height: NODE_HEIGHT,
+      isDuplicate: node.isDuplicate || false,
+      originalId: node.personId,
     };
+    // Store the posKey on the node so parent connectors know where this child is
+    node._posKey = posKey;
     return;
   }
 
   // Place this person and all their union families
   let currentX = x;
+  let personPosKey = null;
 
   node.unions.forEach((u, uIdx) => {
     if (uIdx > 0) {
@@ -248,52 +269,48 @@ function positionTree(node, x, y, positions, unionPositions) {
     const unitLeft = currentX;
     const unitWidth = u.unitWidth;
     const unitCenter = unitLeft + unitWidth / 2;
-
-    // Position the couple centered in their unit
     const coupleLeft = unitCenter - u.coupleWidth / 2;
 
-    // Person position (only set if not already positioned from a previous union)
-    if (!positions[node.personId]) {
-      positions[node.personId] = {
-        x: coupleLeft,
-        y: nodeY,
-        width: NODE_WIDTH,
-        height: NODE_HEIGHT,
-      };
-    }
-
-    // For additional marriages, the person is already placed.
-    // We need to position the partner relative to the unit center.
-    // The person might be on the left or right; we put the main person left, partner right.
-    const personX = positions[node.personId].x;
-
-    // Partner position
-    let partnerX;
+    // Position the person in this union
+    let thisPosKey;
     if (uIdx === 0) {
-      // First union: person left, partner right
-      partnerX = coupleLeft + NODE_WIDTH + COUPLE_GAP;
+      // First union: use the person's real ID
+      thisPosKey = getPosKey(node.personId, positions, dupCounts);
+      personPosKey = thisPosKey;
     } else {
-      // Additional union: partner placed next to person
-      // Person is already placed, so position partner in this unit
-      partnerX = unitCenter - u.coupleWidth / 2 + NODE_WIDTH + COUPLE_GAP;
-      // If person is far away, just center the couple here
-      if (Math.abs(personX - (unitCenter - u.coupleWidth / 2)) > unitWidth) {
-        partnerX = unitCenter + COUPLE_GAP / 2;
-      }
+      // Additional union: create a duplicate of the person
+      thisPosKey = getPosKey(node.personId, positions, dupCounts);
     }
 
-    if (!positions[u.partnerId]) {
-      positions[u.partnerId] = {
-        x: partnerX,
-        y: nodeY,
-        width: NODE_WIDTH,
-        height: NODE_HEIGHT,
-      };
-    }
+    positions[thisPosKey] = {
+      x: coupleLeft,
+      y: nodeY,
+      width: NODE_WIDTH,
+      height: NODE_HEIGHT,
+      isDuplicate: uIdx > 0,
+      originalId: node.personId,
+    };
+
+    // Position the partner
+    const partnerPosKey = getPosKey(u.partnerId, positions, dupCounts);
+    const partnerX = coupleLeft + NODE_WIDTH + COUPLE_GAP;
+
+    positions[partnerPosKey] = {
+      x: partnerX,
+      y: nodeY,
+      width: NODE_WIDTH,
+      height: NODE_HEIGHT,
+      isDuplicate: u.partnerIsDuplicate || false,
+      originalId: u.partnerId,
+    };
+
+    // Store position keys on the union for connector building
+    u._personPosKey = thisPosKey;
+    u._partnerPosKey = partnerPosKey;
 
     // Union dot between the couple
-    const p1X = positions[node.personId].x;
-    const p2X = positions[u.partnerId].x;
+    const p1X = positions[thisPosKey].x;
+    const p2X = positions[partnerPosKey].x;
     const dotX = (Math.min(p1X, p2X) + NODE_WIDTH + Math.max(p1X, p2X)) / 2;
 
     unionPositions[u.unionId] = {
@@ -306,47 +323,55 @@ function positionTree(node, x, y, positions, unionPositions) {
       const childY = nodeY + NODE_HEIGHT + V_GAP;
       const childrenTotalWidth = u.childrenWidth;
 
-      // Center children under the union dot
       let childX = dotX - childrenTotalWidth / 2;
-
-      // But make sure we don't go left of unitLeft
       childX = Math.max(childX, unitLeft);
 
       u.children.forEach((child, cIdx) => {
         if (cIdx > 0) childX += H_GAP;
-        positionTree(child, childX, childY, positions, unionPositions);
+        positionTree(child, childX, childY, positions, unionPositions, dupCounts);
         childX += child.subtreeWidth;
       });
     }
 
     currentX = unitLeft + unitWidth;
   });
+
+  // Store the primary posKey on the node
+  node._posKey = personPosKey;
 }
 
 /**
- * Build all connector lines (partner lines + parent-child lines).
- * Each connector now carries a `branch` property for color-coding.
+ * Build all connector lines.
+ * Uses the position keys stored on each union during positioning.
  */
 function buildConnectors(tree, positions, unionPositions) {
   const connectors = [];
   const visited = new Set();
+  let walkId = 0;
 
   function walk(node, branch) {
-    if (!node || visited.has(node.personId)) return;
-    visited.add(node.personId);
+    if (!node) return;
+    // Use a unique walk ID to avoid re-visiting the same tree node
+    const wid = `${node.personId}_${walkId++}`;
+    if (visited.has(node.personId) && !node.isDuplicate && node.unions.length > 0) {
+      // Skip re-walking nodes we've already fully processed
+      // (but duplicates and leaf nodes are fine to "walk" since they have no unions)
+      return;
+    }
+    if (node.unions.length > 0) visited.add(node.personId);
 
     node.unions.forEach((u) => {
       const uPos = unionPositions[u.unionId];
       if (!uPos) return;
 
       const currentBranch = u.branchName || branch;
+      const personPos = positions[u._personPosKey];
+      const partnerPos = positions[u._partnerPosKey];
 
       // Partner connector line
-      const p1Pos = positions[node.personId];
-      const p2Pos = positions[u.partnerId];
-      if (p1Pos && p2Pos) {
-        const leftPos = p1Pos.x < p2Pos.x ? p1Pos : p2Pos;
-        const rightPos = p1Pos.x < p2Pos.x ? p2Pos : p1Pos;
+      if (personPos && partnerPos) {
+        const leftPos = personPos.x < partnerPos.x ? personPos : partnerPos;
+        const rightPos = personPos.x < partnerPos.x ? partnerPos : personPos;
         const lineY = leftPos.y + NODE_HEIGHT / 2;
 
         connectors.push({
@@ -363,7 +388,10 @@ function buildConnectors(tree, positions, unionPositions) {
       // Child connectors
       if (u.children.length > 0) {
         const childPositions = u.children
-          .map((c) => positions[c.personId])
+          .map((c) => {
+            const key = c._posKey;
+            return key ? positions[key] : null;
+          })
           .filter(Boolean);
         if (childPositions.length === 0) return;
 
