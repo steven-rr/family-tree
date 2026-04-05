@@ -131,7 +131,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Victor Rivadeneira and Mercedes Osorio. Had three children: Aurelio, Manuel, and Esperanza.",
+    bio: "Daughter of Victor Rivadeneira and Mercedes Osorio. Had six children: Isabel (Shabuka), Mercedes, Violeta, Aurelio, Manuel, and Esperanza.",
     photo: null,
   },
   "casamira-osorio": {
@@ -141,7 +141,7 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Victor Rivadeneira and Mercedes Osorio. Had children: Violeta, Santos, and Fidel. Spouse name unknown.",
+    bio: "Daughter of Victor Rivadeneira and Mercedes Osorio. Had two marriages — first to a man named Nevado (child: Prospero), then to a man named Cordoba (children: Lino, Santos, Fidel).",
     photo: null,
   },
   "pedro-osorio": {
@@ -228,14 +228,24 @@ export const people = {
     bio: "Partner of Andrea Rivadeneira. Name unknown.",
     photo: null,
   },
-  "unknown-casamira-spouse": {
-    id: "unknown-casamira-spouse",
+  "mr-nevado": {
+    id: "mr-nevado",
     firstName: "Unknown",
-    lastName: "",
+    lastName: "Nevado",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Partner of Casimira Rivadeneira. Name unknown.",
+    bio: "First husband of Casimira Rivadeneira. Father of Prospero.",
+    photo: null,
+  },
+  "mr-cordoba": {
+    id: "mr-cordoba",
+    firstName: "Unknown",
+    lastName: "Cordoba",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Second husband of Casimira Rivadeneira. Father of Lino, Santos, and Fidel.",
     photo: null,
   },
   "maria-pedro-wife1": {
@@ -475,8 +485,29 @@ export const people = {
   },
 
   // ============================================================
-  // GENERATION 2 — ERNESTINA'S CHILDREN
+  // GENERATION 2 — ERNESTINA'S CHILDREN (6)
   // ============================================================
+  "isabel-shabuka": {
+    id: "isabel-shabuka",
+    firstName: "Isabel",
+    nickname: "Shabuka",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Ernestina Rivadeneira. Known by the nickname Shabuka.",
+    photo: null,
+  },
+  "mercedes-ernestina": {
+    id: "mercedes-ernestina",
+    firstName: "Mercedes",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Ernestina Rivadeneira.",
+    photo: null,
+  },
   "aurelio": {
     id: "aurelio",
     firstName: "Aurelio",
@@ -507,10 +538,6 @@ export const people = {
     bio: "Daughter of Ernestina Rivadeneira.",
     photo: null,
   },
-
-  // ============================================================
-  // GENERATION 2 — CASIMIRA'S CHILDREN
-  // ============================================================
   "violeta": {
     id: "violeta",
     firstName: "Violeta",
@@ -518,27 +545,98 @@ export const people = {
     gender: "female",
     birthYear: null,
     deathYear: null,
-    bio: "Daughter of Casimira Rivadeneira.",
+    bio: "Daughter of Ernestina Rivadeneira. Had three children: Lucrecia, Maruja, and Luis (Lucho).",
     photo: null,
   },
-  "santos": {
-    id: "santos",
+
+  // ============================================================
+  // GENERATION 2 — CASIMIRA'S CHILDREN
+  // ============================================================
+  // From Casimira + Mr. Nevado
+  "prospero-nevado": {
+    id: "prospero-nevado",
+    firstName: "Prospero",
+    lastName: "Nevado",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Casimira Rivadeneira and Mr. Nevado. Oldest child of Casimira.",
+    photo: null,
+  },
+  // From Casimira + Mr. Cordoba
+  "lino-cordoba": {
+    id: "lino-cordoba",
+    firstName: "Lino",
+    lastName: "Cordoba",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Casimira Rivadeneira and Mr. Cordoba.",
+    photo: null,
+  },
+  "santos-cordoba": {
+    id: "santos-cordoba",
     firstName: "Santos",
-    lastName: "",
+    lastName: "Cordoba",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Casimira Rivadeneira.",
+    bio: "Son of Casimira Rivadeneira and Mr. Cordoba.",
     photo: null,
   },
-  "fidel": {
-    id: "fidel",
+  "fidel-cordoba": {
+    id: "fidel-cordoba",
     firstName: "Fidel",
+    lastName: "Cordoba",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Son of Casimira Rivadeneira and Mr. Cordoba.",
+    photo: null,
+  },
+
+  // ============================================================
+  // GENERATION 3 — VIOLETA'S CHILDREN
+  // ============================================================
+  "lucrecia": {
+    id: "lucrecia",
+    firstName: "Lucrecia",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Violeta. Great-granddaughter of Ernestina Rivadeneira.",
+    photo: null,
+  },
+  "maruja": {
+    id: "maruja",
+    firstName: "Maruja",
+    lastName: "",
+    gender: "female",
+    birthYear: null,
+    deathYear: null,
+    bio: "Daughter of Violeta. Great-granddaughter of Ernestina Rivadeneira.",
+    photo: null,
+  },
+  "luis-lucho": {
+    id: "luis-lucho",
+    firstName: "Luis",
+    nickname: "Lucho",
     lastName: "",
     gender: "male",
     birthYear: null,
     deathYear: null,
-    bio: "Son of Casimira Rivadeneira.",
+    bio: "Son of Violeta. Known by the nickname Lucho. Great-grandson of Ernestina Rivadeneira.",
+    photo: null,
+  },
+  "unknown-violeta-spouse": {
+    id: "unknown-violeta-spouse",
+    firstName: "Unknown",
+    lastName: "",
+    gender: "male",
+    birthYear: null,
+    deathYear: null,
+    bio: "Partner of Violeta. Father of Lucrecia, Maruja, and Luis (Lucho).",
     photo: null,
   },
 
@@ -1174,15 +1272,29 @@ export const unions = {
     id: "union-ernestina",
     partner1: "ernestina-osorio",
     partner2: "unknown-ernestina-spouse",
-    children: ["aurelio", "manuel-ernestina", "esperanza"],
+    children: ["isabel-shabuka", "mercedes-ernestina", "violeta", "aurelio", "manuel-ernestina", "esperanza"],
   },
 
-  // === Casimira's family ===
-  "union-casamira": {
-    id: "union-casamira",
+  // === Violeta's family ===
+  "union-violeta": {
+    id: "union-violeta",
+    partner1: "violeta",
+    partner2: "unknown-violeta-spouse",
+    children: ["lucrecia", "maruja", "luis-lucho"],
+  },
+
+  // === Casimira's families ===
+  "union-casamira-nevado": {
+    id: "union-casamira-nevado",
     partner1: "casamira-osorio",
-    partner2: "unknown-casamira-spouse",
-    children: ["violeta", "santos", "fidel"],
+    partner2: "mr-nevado",
+    children: ["prospero-nevado"],
+  },
+  "union-casamira-cordoba": {
+    id: "union-casamira-cordoba",
+    partner1: "casamira-osorio",
+    partner2: "mr-cordoba",
+    children: ["lino-cordoba", "santos-cordoba", "fidel-cordoba"],
   },
 
   // === Pedro (grandfather) + Maria (first wife) ===
